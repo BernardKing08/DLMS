@@ -1,0 +1,12 @@
+
+build: 
+  version: "1.0"
+
+account: 
+  message: "welcome to account DLMS"
+  contactDetails: 
+    name: "Reine - product owner"
+    email: "asisheya@gmail.com"
+  oncallSupport: 
+    -(234) 245 5435 345
+    -(234) 365 4563 453

@@ -1,0 +1,16 @@
+spring:
+    config:
+        activate: 
+            on-profile: "qa"
+
+build:
+    version: "5.0"
+
+accounts:
+    message: "Welcome to QA"
+    contactDetails: 
+        name:"Smith"
+        email:"simth@QA"
+    oncallSupport:
+        -(888)234-3765
+        -(999)234-3434
