@@ -2,7 +2,7 @@ build:
   version: "3.0"
 
 account: 
-  message: "welcome to DLMS catalog prod"
+  message: "welcome to DLMS webhook catalog prod"
   contactDetails: 
     name: "Reine - product owner"
     email: "asisheya@gmail.com"
