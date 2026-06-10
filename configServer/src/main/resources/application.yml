@@ -14,7 +14,7 @@ spring:
           force-pull: true
           search-paths: "configServer/src/main/resources/config"
   rabbitmq:
-    host: "localhost"
+    host: "rabbitmq"
     port: 5672
     username: "guest"
     password: "guest"
