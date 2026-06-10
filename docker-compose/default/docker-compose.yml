@@ -1,4 +1,10 @@
+# docker-compose.yml
+# The real stack. Each service inherits shared config from common-config.yml
+# via `extends`, and declares only what is unique to it (image, ports, name,
+# app name) plus its own depends_on (which is intentionally NOT inherited).
+
 services:
+
   rabbitmq:
     image: rabbitmq:3.13-management
     container_name: rabbitmq
@@ -10,106 +16,85 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-      start_period: 5s   
-    networks:
-      - bernardking08
-  configserver: 
-    image: bernardking08/config-service:s6
+      start_period: 5s
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
+  configserver:
+    image: bernardking08/config-server:s6
     container_name: configserver
     ports:
       - "8071:8071"
-    depends_on: 
-      rabbitmq:
-        condition: service_healthy  
-    healthcheck: 
+    healthcheck:
       test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 10s
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks:
-      - bernardking08
+    extends:
+      file: common-config.yml
+      service: microservice-base-config
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
-  accounts: 
+  accounts:
     image: bernardking08/accounts-service:s6
     container_name: account
     ports:
       - "8080:8080"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
     depends_on:
       configserver:
         condition: service_healthy
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks:
-      - bernardking08
     environment:
       SPRING_APPLICATION_NAME: "accounts"
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
-      SPRING_PROFILES_ACTIVE: default
-      
-  auth: 
+
+  auth:
     image: bernardking08/auth-service:s6
     container_name: auth
     ports:
       - "8090:8090"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
     depends_on:
       configserver:
         condition: service_healthy
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks:
-      - bernardking08
     environment:
       SPRING_APPLICATION_NAME: "authentication"
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
-      SPRING_PROFILES_ACTIVE: default
 
-  catalog: 
+  catalog:
     image: bernardking08/catalog-service:s6
     container_name: catalog
     ports:
       - "9000:9000"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
     depends_on:
       configserver:
         condition: service_healthy
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks:
-      - bernardking08
     environment:
       SPRING_APPLICATION_NAME: "catalog"
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
-      SPRING_PROFILES_ACTIVE: default
 
-  inventory: 
+  inventory:
     image: bernardking08/inventory-service:s6
     container_name: inventory
     ports:
       - "9010:9010"
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
     depends_on:
       configserver:
         condition: service_healthy
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks:
-      - bernardking08
     environment:
       SPRING_APPLICATION_NAME: "inventory"
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
-      SPRING_PROFILES_ACTIVE: default
 
 networks:
-  bernardking08: 
+  bernardking08:
     driver: "bridge"

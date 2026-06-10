@@ -22,6 +22,9 @@
 
 		<!-- FIXED VERSION -->
 		<spring-cloud.version>2023.0.3</spring-cloud.version>
+
+		<!-- Jib plugin version -->
+		<jib-maven-plugin.version>3.4.3</jib-maven-plugin.version>
 	</properties>
 
 	<repositories>
@@ -84,6 +87,34 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<!-- Jib: builds the container image directly -->
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>${jib-maven-plugin.version}</version>
+				<configuration>
+					<from>
+						<!-- Slim JRE base matching java.version = 21 -->
+						<image>eclipse-temurin:21-jre-jammy</image>
+					</from>
+					<to>
+						<!-- Lowercase name (Docker requires it); artifactId is "configServer" with a capital S, so hardcoded -->
+						<image>bernardking08/config-server:s6</image>
+					</to>
+					<container>
+						<ports>
+							<!-- Config Server convention is 8888; this is just EXPOSE metadata -->
+							<port>8888</port>
+						</ports>
+						<jvmFlags>
+							<jvmFlag>-XX:+UseContainerSupport</jvmFlag>
+							<jvmFlag>-XX:MaxRAMPercentage=75.0</jvmFlag>
+						</jvmFlags>
+						<creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+					</container>
+				</configuration>
 			</plugin>
 
 		</plugins>

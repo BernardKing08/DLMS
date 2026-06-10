@@ -1,0 +1,22 @@
+services:
+  network-deploy-service:
+    networks:                 # was "network:" — must be plural
+      - bernardking08
+
+  microservice-base-config:
+    extends:
+      service: network-deploy-service
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    environment:
+      SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_RABBITMQ_PORT: 5672
+
+  microservice-configserver-config:
+    extends:
+      service: network-deploy-service
+    environment:
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+      SPRING_PROFILES_ACTIVE: default

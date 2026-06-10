@@ -24,6 +24,8 @@
         <java.version>21</java.version>
         <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
         <spring-cloud.version>2023.0.3</spring-cloud.version>
+        <!-- Jib plugin version -->
+        <jib-maven-plugin.version>3.4.3</jib-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -106,10 +108,51 @@
 
     <build>
         <plugins>
+
+            <!-- Spring Boot plugin: still needed to build the runnable JAR.
+                 The Paketo <image> block has been removed - Jib handles imaging now. -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
             </plugin>
+
+            <!-- Jib: replaces Paketo / Cloud Native Buildpacks.
+                 Builds the container image directly, no Docker daemon required. -->
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>${jib-maven-plugin.version}</version>
+                <configuration>
+                    <from>
+                        <!-- Slim JRE base matching java.version = 21 -->
+                        <image>eclipse-temurin:21-jre-jammy</image>
+                    </from>
+                    <to>
+                        <!-- Same image name you used with Paketo -->
+                        <image>bernardking08/inventory-service:s6</image>
+                    </to>
+                    <container>
+                        <ports>
+                            <port>8080</port>
+                        </ports>
+                        <jvmFlags>
+                            <jvmFlag>-XX:+UseContainerSupport</jvmFlag>
+                            <jvmFlag>-XX:MaxRAMPercentage=75.0</jvmFlag>
+                        </jvmFlags>
+                        <!-- Real build timestamp instead of the 1970 default -->
+                        <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+                    </container>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
