@@ -2,7 +2,7 @@ server:
   port: 9010
 spring:
   application:
-    name: "cards"
+    name: "inventory"
   profiles:
     active: "prod"
   datasource:
@@ -20,11 +20,11 @@ spring:
     show-sql: true
   config:
     import: "optional:configserver:http://configserver:8071/"
-  rabbitmq: 
-    host: "rabbitmq"
-    port:  5672
-    username: "guest"
-    password: "guest"
+  # rabbitmq: 
+  #   host: "rabbitmq"
+  #   port:  5672
+  #   username: "guest"
+  #   password: "guest"
 
 management:
   endpoints: 
