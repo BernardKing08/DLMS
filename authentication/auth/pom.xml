@@ -79,12 +79,18 @@
         </dependency>
 
         <!-- H2 Database (Dev only, later MySQL when deploying) -->
-        <dependency>
+        <!-- <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
-        </dependency>
+        </dependency> -->
 
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        
         <!-- Validation (DTO validation) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
