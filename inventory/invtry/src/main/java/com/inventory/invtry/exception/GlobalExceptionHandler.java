@@ -1,6 +1,6 @@
-package com.dlms.auth.exception;
+package com.inventory.invtry.exception;
 
-import com.dlms.auth.dto.ErrorResponseDto;
+import com.inventory.invtry.dto.ErrorResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +15,8 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    /**
-     * Handles lookups for a userId that does not exist (e.g. Account
-     * service validating a userId before provisioning a profile)
-     */
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(
+    public ResponseEntity<ErrorResponseDto> handleResourceNotFound(
             ResourceNotFoundException ex,
             HttpServletRequest request
     ) {
@@ -34,9 +30,21 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    /**
-     * Handles validation errors (@Valid failures)
-     */
+    @ExceptionHandler(ServiceUnavailableException.class)
+    public ResponseEntity<ErrorResponseDto> handleServiceUnavailable(
+            ServiceUnavailableException ex,
+            HttpServletRequest request
+    ) {
+        ErrorResponseDto errorResponse = new ErrorResponseDto(
+                request.getRequestURI(),
+                HttpStatus.SERVICE_UNAVAILABLE,
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> handleValidationException(
             MethodArgumentNotValidException ex,
@@ -58,47 +66,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-    /**
-     * Handles business rule violations (e.g. invalid credentials)
-     */
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(
-            IllegalArgumentException ex,
-            HttpServletRequest request
-    ) {
-        ErrorResponseDto errorResponse = new ErrorResponseDto(
-                request.getRequestURI(),
-                HttpStatus.BAD_REQUEST,
-                ex.getMessage(),
-                LocalDateTime.now()
-        );
-
-        return ResponseEntity.badRequest().body(errorResponse);
-    }
-
-    /**
-     * Handles illegal application state (e.g. role not found)
-     */
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<ErrorResponseDto> handleIllegalStateException(
-            IllegalStateException ex,
-            HttpServletRequest request
-    ) {
-        ErrorResponseDto errorResponse = new ErrorResponseDto(
-                request.getRequestURI(),
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                ex.getMessage(),
-                LocalDateTime.now()
-        );
-
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(errorResponse);
-    }
-
-    /**
-     * Fallback for all uncaught exceptions
-     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGenericException(
             Exception ex,
@@ -111,8 +78,6 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()
         );
 
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(errorResponse);
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

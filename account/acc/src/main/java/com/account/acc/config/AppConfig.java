@@ -1,4 +1,4 @@
-package com.dlms.auth.config;
+package com.account.acc.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

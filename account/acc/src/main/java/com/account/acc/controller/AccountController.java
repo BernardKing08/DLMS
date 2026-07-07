@@ -1,9 +1,11 @@
 package com.account.acc.controller;
 
+import com.account.acc.dto.AccountCreateRequestDto;
 import com.account.acc.dto.AccountResponseDto;
 import com.account.acc.dto.AccountUpdateRequestDto;
 import com.account.acc.service.AccountService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,12 @@ public class AccountController {
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
+
+    @PostMapping
+    public ResponseEntity<AccountResponseDto> createAccount(
+            @Valid @RequestBody AccountCreateRequestDto request) {
+        return new ResponseEntity<>(accountService.createAccount(request), HttpStatus.CREATED);
+    } 
 
     @GetMapping("/{userId}")
     public ResponseEntity<AccountResponseDto> getAccount(@PathVariable Long userId) {
