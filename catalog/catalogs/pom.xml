@@ -143,7 +143,7 @@
                     </from>
                     <to>
                         <!-- Same image name you used with Paketo -->
-                        <image>bernardking08/catalog-service:s6</image>
+                        <image>bernardking08/catalog-service:cc1</image>
                     </to>
                     <container>
                         <ports>

@@ -6,7 +6,7 @@ spring:
   profiles:
     active: "prod"
   datasource:
-    url: jdbc:mysql://localhost:3307/accountdb
+    url: jdbc:mysql://host.docker.internal:3307/accountdb
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: root
@@ -17,12 +17,16 @@ spring:
       mode: always 
   config:
     import: "optional:configserver:http://configserver:8071/"
-  # rabbitmq: 
+  # rabbitmq:
   #   host: "rabbitmq"
   #   port:  5672
   #   username: "guest"
   #   password: "guest"
-    
+
+services:
+  auth:
+    url: http://auth:8090
+
 management:
   endpoints: 
     web:
