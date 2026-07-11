@@ -1,0 +1,15 @@
+# Claude Code project settings (local, machine-specific)
+.claude/
+
+# Maven build output
+target/
+*.class
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
