@@ -32,4 +32,28 @@ management:
     web:
       exposure: 
         include: "*"
+  endpoints:
+    shutdown:
+      access: "unrestricted"
+  info:
+    env:
+      enabled: true
+
+endpoints:
+  shutdown:
+    access: "unrestricted"
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
   
+info:
+  app:
+    name: "account"
+    description: "DLMS - Account Service"
+    version: "1.0.0"
