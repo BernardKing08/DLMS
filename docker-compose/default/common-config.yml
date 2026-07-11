@@ -23,9 +23,6 @@ services:
       resources:
         limits:
           memory: 700m
-    environment:
-      SPRING_RABBITMQ_HOST: "rabbitmq"
-      SPRING_RABBITMQ_PORT: 5672
 
   microservice-configserver-config:
     extends:
