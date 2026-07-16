@@ -60,12 +60,12 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- In-memory database (dev/testing only)
+        <!-- In-memory database (qa profile only) -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
-        </dependency> -->
+        </dependency>
 
         <dependency>
             <groupId>com.mysql</groupId>
@@ -122,8 +122,8 @@
     <build>
         <plugins>
 
-            <!-- Spring Boot plugin: still needed to build the runnable JAR.
-                 The Paketo <image> block has been removed - Jib handles imaging now. -->
+        <!-- Spring Boot plugin: still needed to build the runnable JAR.
+            The Paketo <image> block has been removed - Jib handles imaging now. -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

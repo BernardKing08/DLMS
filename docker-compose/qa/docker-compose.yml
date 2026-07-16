@@ -1,48 +1,10 @@
 # docker-compose.yml
-# The real stack. Each service inherits shared config from common-config.yml
-# via `extends`, and declares only what is unique to it (image, ports, name,
-# app name) plus its own depends_on (which is intentionally NOT inherited).
+# QA stack: same services as default, but each microservice runs on the
+# "qa" Spring profile, which points it at an in-memory H2 database instead
+# of MySQL (see application-qa.yml in each service). No MySQL containers
+# needed here at all - only the config server + the four app services.
 
 services:
-  accountsdb:
-    container_name: accountsdb
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_DATABASE: "accountsdb"
-    extends:
-      file: common-config.yml
-      service: microservice-db-config
-
-  authdb:
-    container_name: authdb
-    ports:
-      - "3308:3306"
-    environment:
-      MYSQL_DATABASE: "authdb"
-    extends:
-      file: common-config.yml
-      service: microservice-db-config
-
-  catalogdb:
-    container_name: catalogdb
-    ports:
-      - "3309:3306"
-    environment:
-      MYSQL_DATABASE: "catalogdb"
-    extends:
-      file: common-config.yml
-      service: microservice-db-config
-
-  inventorydb:
-    container_name: inventorydb
-    ports:
-      - "3310:3306"
-    environment:
-      MYSQL_DATABASE: "inventorydb"
-    extends:
-      file: common-config.yml
-      service: microservice-db-config
 
   configserver:
     image: bernardking08/config-server:cc1
@@ -70,11 +32,8 @@ services:
     depends_on:
       configserver:
         condition: service_healthy
-      accountsdb:
-        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "accounts"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
 
   auth:
     image: bernardking08/auth-service:cc1
@@ -87,11 +46,8 @@ services:
     depends_on:
       configserver:
         condition: service_healthy
-      authdb:
-        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "authentication"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://authdb:3306/authdb"
 
   catalog:
     image: bernardking08/catalog-service:cc1
@@ -104,11 +60,8 @@ services:
     depends_on:
       configserver:
         condition: service_healthy
-      catalogdb:
-        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "catalog"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://catalogdb:3306/catalogdb"
 
   inventory:
     image: bernardking08/inventory-service:cc1
@@ -121,11 +74,8 @@ services:
     depends_on:
       configserver:
         condition: service_healthy
-      inventorydb:
-        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "inventory"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://inventorydb:3306/inventorydb"
 
 networks:
   bernardking08:

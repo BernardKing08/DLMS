@@ -28,8 +28,29 @@ services:
     url: http://account:8080
 
 management:
-  endpoints: 
+  endpoints:
     web:
-      exposure: 
+      exposure:
         include: "*"
+  endpoint:
+    shutdown:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  
+info:
+  app:
+    name: "Authentication"
+    description: "DLMS - Authentication Service"
+    version: "1.0.0"
   
