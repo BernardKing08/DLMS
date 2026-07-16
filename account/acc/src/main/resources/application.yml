@@ -28,20 +28,16 @@ services:
     url: http://auth:8090
 
 management:
-  endpoints: 
-    web:
-      exposure: 
-        include: "*"
   endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
     shutdown:
-      access: "unrestricted"
+      enabled: true
   info:
     env:
       enabled: true
-
-endpoints:
-  shutdown:
-    access: "unrestricted"
 
 eureka:
   instance:

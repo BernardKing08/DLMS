@@ -30,8 +30,11 @@ services:
     depends_on:
       configserver: 
         condition: service_healthy
+      eurekaserver: 
+        condition: service_healthy
     environment:
       SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
       SPRING_PROFILES_ACTIVE: default
       SPRING_DATASOURCE_USERNAME: "root"
       SPRING_DATASOURCE_PASSWORD: "root"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eurekaserver:8761/eureka/"
