@@ -25,7 +25,7 @@ spring:
 
 services:
   auth:
-    url: http://auth:8090
+    url: http://authentication
 
 management:
   endpoints:

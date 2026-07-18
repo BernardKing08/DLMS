@@ -19,7 +19,7 @@ public class AuthClient {
     private final WebClient webClient;
 
     public AuthClient(WebClient.Builder webClientBuilder,
-                       @Value("${services.auth.url:http://auth:8090}") String authServiceUrl) {
+                       @Value("${services.auth.url:http://authentication}") String authServiceUrl) {
         this.webClient = webClientBuilder.baseUrl(authServiceUrl).build();
     }
 

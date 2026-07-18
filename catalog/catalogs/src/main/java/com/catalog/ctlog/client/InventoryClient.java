@@ -25,7 +25,7 @@ public class InventoryClient {
     private final WebClient webClient;
 
     public InventoryClient(WebClient.Builder webClientBuilder,
-                            @Value("${services.inventory.url:http://inventory:9010}") String inventoryServiceUrl) {
+                            @Value("${services.inventory.url:http://inventory}") String inventoryServiceUrl) {
         this.webClient = webClientBuilder.baseUrl(inventoryServiceUrl).build();
     }
 

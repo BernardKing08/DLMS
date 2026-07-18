@@ -22,7 +22,7 @@ public class AccountClient {
     private final WebClient webClient;
 
     public AccountClient(WebClient.Builder webClientBuilder,
-                          @Value("${services.account.url:http://account:8080}") String accountServiceUrl) {
+                          @Value("${services.account.url:http://account}") String accountServiceUrl) {
         this.webClient = webClientBuilder.baseUrl(accountServiceUrl).build();
     }
 

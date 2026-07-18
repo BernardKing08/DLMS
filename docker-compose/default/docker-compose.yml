@@ -88,7 +88,22 @@ services:
       accountsdb:
         condition: service_healthy
     environment:
-      SPRING_APPLICATION_NAME: "accounts"
+      SPRING_APPLICATION_NAME: "account"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
+
+  accounts1:
+    image: bernardking08/accounts-service:cc1
+    container_name: account1
+    ports:
+      - "8081:8080"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+    depends_on:
+      accountsdb:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "account"
       SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
 
   auth:

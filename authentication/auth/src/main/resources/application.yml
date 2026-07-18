@@ -25,7 +25,7 @@ spring:
 
 services:
   account:
-    url: http://account:8080
+    url: http://account
 
 management:
   endpoints:

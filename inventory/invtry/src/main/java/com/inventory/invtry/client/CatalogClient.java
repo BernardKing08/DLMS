@@ -19,7 +19,7 @@ public class CatalogClient {
     private final WebClient webClient;
 
     public CatalogClient(WebClient.Builder webClientBuilder,
-                          @Value("${services.catalog.url:http://catalog:9000}") String catalogServiceUrl) {
+                          @Value("${services.catalog.url:http://catalog}") String catalogServiceUrl) {
         this.webClient = webClientBuilder.baseUrl(catalogServiceUrl).build();
     }
 

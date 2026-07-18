@@ -25,7 +25,7 @@ spring:
 
 services:
   inventory:
-    url: http://inventory:9010
+    url: http://inventory
 
 management:
   endpoints:
