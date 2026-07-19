@@ -1,5 +1,6 @@
 package com.catalog.ctlog.dto;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -18,4 +19,7 @@ public class BookRequestDto {
     private String category;
 
     private String description;
+
+    @Min(0)
+    private int totalCopies;
 }

@@ -16,6 +16,25 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     /**
+     * Handles lookups for a userId that does not exist (e.g. Account
+     * service validating a userId before provisioning a profile)
+     */
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(
+            ResourceNotFoundException ex,
+            HttpServletRequest request
+    ) {
+        ErrorResponseDto errorResponse = new ErrorResponseDto(
+                request.getRequestURI(),
+                HttpStatus.NOT_FOUND,
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    /**
      * Handles validation errors (@Valid failures)
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)

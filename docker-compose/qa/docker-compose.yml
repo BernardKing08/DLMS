@@ -1,28 +1,13 @@
 # docker-compose.yml
-# The real stack. Each service inherits shared config from common-config.yml
-# via `extends`, and declares only what is unique to it (image, ports, name,
-# app name) plus its own depends_on (which is intentionally NOT inherited).
+# QA stack: same services as default, but each microservice runs on the
+# "qa" Spring profile, which points it at an in-memory H2 database instead
+# of MySQL (see application-qa.yml in each service). No MySQL containers
+# needed here at all - only the config server + the four app services.
 
 services:
 
-  rabbitmq:
-    image: rabbitmq:3.13-management
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    healthcheck:
-      test: rabbitmq-diagnostics check_port_connectivity
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 5s
-    extends:
-      file: common-config.yml
-      service: network-deploy-service
-
   configserver:
-    image: bernardking08/config-server:s6
+    image: bernardking08/config-server:cc1
     container_name: configserver
     ports:
       - "8071:8071"
@@ -35,12 +20,9 @@ services:
     extends:
       file: common-config.yml
       service: microservice-base-config
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
 
   accounts:
-    image: bernardking08/accounts-service:s6
+    image: bernardking08/accounts-service:cc1
     container_name: account
     ports:
       - "8080:8080"
@@ -54,7 +36,7 @@ services:
       SPRING_APPLICATION_NAME: "accounts"
 
   auth:
-    image: bernardking08/auth-service:s6
+    image: bernardking08/auth-service:cc1
     container_name: auth
     ports:
       - "8090:8090"
@@ -68,7 +50,7 @@ services:
       SPRING_APPLICATION_NAME: "authentication"
 
   catalog:
-    image: bernardking08/catalog-service:s6
+    image: bernardking08/catalog-service:cc1
     container_name: catalog
     ports:
       - "9000:9000"
@@ -82,7 +64,7 @@ services:
       SPRING_APPLICATION_NAME: "catalog"
 
   inventory:
-    image: bernardking08/inventory-service:s6
+    image: bernardking08/inventory-service:cc1
     container_name: inventory
     ports:
       - "9010:9010"

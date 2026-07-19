@@ -14,4 +14,6 @@ public class BookResponseDto {
     private String category;
     private String description;
     private boolean active;
+    private int totalCopies;
+    private int availableCopies;
 }

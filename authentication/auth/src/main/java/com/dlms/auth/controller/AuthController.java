@@ -4,6 +4,8 @@ import com.dlms.auth.constants.AuthConstants;
 import com.dlms.auth.dto.LoginRequest;
 import com.dlms.auth.dto.RegisterRequest;
 import com.dlms.auth.dto.ResponseDto;
+import com.dlms.auth.dto.UserResponseDto;
+import com.dlms.auth.model.User;
 import com.dlms.auth.service.Impl.AuthServiceImpl;
 
 import jakarta.validation.Valid;
@@ -52,6 +54,18 @@ public class AuthController {
                         AuthConstants.STATUS_200,
                         AuthConstants.MESSAGE_200
                 )
+        );
+    }
+
+    /**
+     * Used by other services (e.g. Account) to validate that a userId
+     * corresponds to a real, registered user.
+     */
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
+        User user = authService.getUserById(id);
+        return ResponseEntity.ok(
+                new UserResponseDto(user.getId(), user.getName(), user.getEmail())
         );
     }
 }

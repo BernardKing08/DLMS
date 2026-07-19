@@ -36,10 +36,10 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <dependency>
+        <!-- <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bus-amqp</artifactId>
-        </dependency>
+        </dependency> -->
 
         <!-- REST API -->
         <dependency>
@@ -78,13 +78,12 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- H2 Database (Dev only, later MySQL when deploying) -->
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
-
+        
         <!-- Validation (DTO validation) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -99,6 +98,12 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- WebClient for inter-service calls -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
         <!-- Tests -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -111,6 +116,21 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-config</artifactId>
         </dependency>
+
+        <!-- Eureka client -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
+        <!-- H2 Database (Dev only, later MySQL when deploying) -->
+        <!-- In-memory database (qa profile only) -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        
 
     </dependencies>
 
@@ -158,7 +178,7 @@
                     </from>
                     <to>
                         <!-- Correct auth-service image name -->
-                        <image>bernardking08/auth-service:s6</image>
+                        <image>bernardking08/auth-service:cc1</image>
                     </to>
                     <container>
                         <ports>

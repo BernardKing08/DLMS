@@ -44,19 +44,19 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
-		<dependency>
+		<!-- removing unnecessary dependencies  -->
+		<!-- <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bus-amqp</artifactId>
-        </dependency>
+        </dependency> -->
+		<!-- <dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-config-monitor</artifactId>
+		</dependency> -->
 
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-config-server</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-config-monitor</artifactId>
 		</dependency>
 
 		<dependency>
@@ -101,7 +101,7 @@
 					</from>
 					<to>
 						<!-- Lowercase name (Docker requires it); artifactId is "configServer" with a capital S, so hardcoded -->
-						<image>bernardking08/config-server:s6</image>
+						<image>bernardking08/config-server:cc1</image>
 					</to>
 					<container>
 						<ports>
