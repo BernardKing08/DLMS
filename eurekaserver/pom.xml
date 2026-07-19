@@ -29,6 +29,7 @@
 	<properties>
 		<java.version>21</java.version>
 		<spring-cloud.version>2025.1.2</spring-cloud.version>
+		<jib-maven-plugin.version>3.4.3</jib-maven-plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -68,34 +69,34 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-		</plugins>
 
-		<plugin>
-			<groupId>com.google.cloud.tools</groupId>
-			<artifactId>jib-maven-plugin</artifactId>
-			<version>${jib-maven-plugin.version}</version>
-			<configuration>
-				<from>
-					<!-- Slim JRE base matching java.version = 21 -->
-					<image>eclipse-temurin:21-jre-jammy</image>
-				</from>
-				<to>
-					<!-- Same image name you used with Paketo -->
-					<image>bernardking08/eurekaserver:cc1</image>
-				</to>
-				<container>
-					<ports>
-						<port>8761</port>
-					</ports>
-					<jvmFlags>
-						<jvmFlag>-XX:+UseContainerSupport</jvmFlag>
-						<jvmFlag>-XX:MaxRAMPercentage=75.0</jvmFlag>
-					</jvmFlags>
-					<!-- Real build timestamp instead of the 1970 default -->
-					<creationTime>USE_CURRENT_TIMESTAMP</creationTime>
-				</container>
-			</configuration>
-		</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>${jib-maven-plugin.version}</version>
+				<configuration>
+					<from>
+						<!-- Slim JRE base matching java.version = 21 -->
+						<image>eclipse-temurin:21-jre-jammy</image>
+					</from>
+					<to>
+						<!-- Must match the image name in docker-compose.yml -->
+						<image>bernardking08/eureka-server:cc1</image>
+					</to>
+					<container>
+						<ports>
+							<port>8761</port>
+						</ports>
+						<jvmFlags>
+							<jvmFlag>-XX:+UseContainerSupport</jvmFlag>
+							<jvmFlag>-XX:MaxRAMPercentage=75.0</jvmFlag>
+						</jvmFlags>
+						<!-- Real build timestamp instead of the 1970 default -->
+						<creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+					</container>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 
 </project>

@@ -121,6 +121,21 @@ services:
       SPRING_APPLICATION_NAME: "authentication"
       SPRING_DATASOURCE_URL: "jdbc:mysql://authdb:3306/authdb"
 
+  auth1:
+    image: bernardking08/auth-service:cc1
+    container_name: auth1
+    ports:
+      - "8091:8090"
+    extends:
+      file: common-config.yml
+      service: microservice-eureka-config
+    depends_on:
+      authdb:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "authentication"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://authdb:3306/authdb"
+
   catalog:
     image: bernardking08/catalog-service:cc1
     container_name: catalog
