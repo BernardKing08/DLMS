@@ -1,0 +1,34 @@
+server:
+  port: 8072
+spring:
+  application:
+    name: "gatewayserver"
+  config:
+    import: "optional:configserver:http://configserver:8071/"
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+
+services:
+  auth:
+    url: http://authentication
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "gatewayserver"
+    description: "DLMS - Gateway Service"
+    version: "1.0.0"

@@ -8,7 +8,7 @@ spring:
       server:
         git:
           uri: "https://github.com/BernardKing08/DLMS"
-          default-label: CreatingInterConnection
+          default-label: addingUI
           timeout: 5
           clone-on-start: true
           force-pull: true
