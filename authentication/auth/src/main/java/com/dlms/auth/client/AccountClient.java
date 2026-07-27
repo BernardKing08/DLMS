@@ -1,8 +1,10 @@
 package com.dlms.auth.client;
 
+import com.dlms.auth.filter.CorrelationIdFilter;
 import com.dlms.auth.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -31,8 +33,17 @@ public class AccountClient {
         String firstName = nameParts[0];
         String lastName = nameParts.length > 1 ? nameParts[1] : "";
 
+        // Read MDC now, on the calling (request) thread - by the time
+        // .subscribe() actually fires the HTTP call, we may be on a
+        // different (Netty) thread where this MDC entry wouldn't exist.
+        String correlationId = MDC.get(CorrelationIdFilter.MDC_KEY);
+        if (correlationId == null) {
+            correlationId = "unknown";
+        }
+
         webClient.post()
                 .uri("/api/accounts")
+                .header(CorrelationIdFilter.CORRELATION_ID_HEADER, correlationId)
                 .bodyValue(Map.of(
                         "userId", user.getId(),
                         "firstName", firstName,

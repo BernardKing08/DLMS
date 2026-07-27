@@ -23,6 +23,10 @@ spring:
   #   username: "guest"
   #   password: "guest"
 
+logging:
+  pattern:
+    level: "%5p [${spring.application.name},%X{correlationId}]"
+
 services:
   inventory:
     url: http://inventory
@@ -32,9 +36,17 @@ management:
     web:
       exposure:
         include: "*"
+  health: 
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
   endpoint:
     shutdown:
       enabled: true
+    health:
+      probes:
+        enabled: true
   info:
     env:
       enabled: true

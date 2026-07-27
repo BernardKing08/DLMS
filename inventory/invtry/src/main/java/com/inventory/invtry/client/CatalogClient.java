@@ -3,6 +3,8 @@ package com.inventory.invtry.client;
 import com.inventory.invtry.dto.CatalogBookResponseDto;
 import com.inventory.invtry.exception.ResourceNotFoundException;
 import com.inventory.invtry.exception.ServiceUnavailableException;
+import com.inventory.invtry.filter.CorrelationIdFilter;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -24,9 +26,14 @@ public class CatalogClient {
     }
 
     public CatalogBookResponseDto getBookById(Long bookId) {
+        String correlationId = MDC.get(CorrelationIdFilter.MDC_KEY);
+        if (correlationId == null) {
+            correlationId = "unknown";
+        }
         try {
             return webClient.get()
                     .uri("/api/catalog.ctlog/{id}", bookId)
+                    .header(CorrelationIdFilter.CORRELATION_ID_HEADER, correlationId)
                     .retrieve()
                     .bodyToMono(CatalogBookResponseDto.class)
                     .block();

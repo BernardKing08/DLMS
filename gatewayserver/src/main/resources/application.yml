@@ -7,9 +7,12 @@ spring:
     import: "optional:configserver:http://configserver:8071/"
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: false
+              lowerCaseServiceId: true
 
 services:
   auth:
@@ -32,3 +35,9 @@ info:
     name: "gatewayserver"
     description: "DLMS - Gateway Service"
     version: "1.0.0"
+
+logging:
+  level:
+    com:
+      dlms:
+        gatewayserver: DEBUG
