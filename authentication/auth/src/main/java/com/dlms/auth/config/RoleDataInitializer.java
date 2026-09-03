@@ -5,6 +5,7 @@ import com.dlms.auth.model.Role;
 import com.dlms.auth.repository.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class RoleDataInitializer {
 
     @Bean
+    @Order(1)
     CommandLineRunner initRoles(RoleRepository roleRepository) {
         return args -> {
 

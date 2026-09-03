@@ -178,7 +178,7 @@
                     </from>
                     <to>
                         <!-- Correct auth-service image name -->
-                        <image>bernardking08/auth-service:cc1</image>
+                        <image>bernardking08/auth-service:cc2</image>
                     </to>
                     <container>
                         <ports>

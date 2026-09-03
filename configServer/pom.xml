@@ -101,7 +101,7 @@
 					</from>
 					<to>
 						<!-- Lowercase name (Docker requires it); artifactId is "configServer" with a capital S, so hardcoded -->
-						<image>bernardking08/config-server:cc1</image>
+						<image>bernardking08/config-server:cc2</image>
 					</to>
 					<container>
 						<ports>

@@ -10,6 +10,8 @@ import com.inventory.invtry.service.InventoryService;
 import jakarta.validation.Valid;
 import com.inventory.invtry.dto.InventoryResponseDto;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/inventory")
 public class InventoryController {
@@ -33,5 +35,11 @@ public class InventoryController {
     @GetMapping("/{bookId}")
     public ResponseEntity<InventoryResponseDto> getInventory(@PathVariable Long bookId) {
         return ResponseEntity.ok(inventoryService.getInventoryByBookId(bookId));
+    }
+
+    /** Lists every stock record - general-purpose, not tied to one specific caller. */
+    @GetMapping
+    public ResponseEntity<List<InventoryResponseDto>> getAllInventory() {
+        return ResponseEntity.ok(inventoryService.getAllInventory());
     }
 }

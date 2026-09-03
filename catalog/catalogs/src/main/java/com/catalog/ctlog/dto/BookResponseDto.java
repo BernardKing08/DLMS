@@ -13,6 +13,7 @@ public class BookResponseDto {
     private String isbn;
     private String category;
     private String description;
+    private String coverImageUrl;
     private boolean active;
     private int totalCopies;
     private int availableCopies;

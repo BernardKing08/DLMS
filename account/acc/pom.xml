@@ -150,7 +150,7 @@
                     </from>
                     <to>
                         <!-- Same image name you used with Paketo -->
-                        <image>bernardking08/accounts-service:cc1</image>
+                        <image>bernardking08/accounts-service:cc2</image>
                     </to>
                     <container>
                         <ports>

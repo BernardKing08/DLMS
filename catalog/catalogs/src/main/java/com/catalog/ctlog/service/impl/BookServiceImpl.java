@@ -36,6 +36,7 @@ public class BookServiceImpl implements BookService {
                 .isbn(request.getIsbn())
                 .category(request.getCategory())
                 .description(request.getDescription())
+                .coverImageUrl(request.getCoverImageUrl())
                 .build();
 
         Book savedBook = bookRepository.save(book);
@@ -95,6 +96,7 @@ public class BookServiceImpl implements BookService {
                 book.getIsbn(),
                 book.getCategory(),
                 book.getDescription(),
+                book.getCoverImageUrl(),
                 book.isActive(),
                 totalCopies,
                 availableCopies

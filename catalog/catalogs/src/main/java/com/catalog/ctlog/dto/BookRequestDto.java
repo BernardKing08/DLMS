@@ -20,6 +20,9 @@ public class BookRequestDto {
 
     private String description;
 
+    /** Optional - path or URL to a cover image. Falls back to a generic placeholder if blank. */
+    private String coverImageUrl;
+
     @Min(0)
     private int totalCopies;
 }

@@ -11,6 +11,8 @@ import com.inventory.invtry.modal.Inventory;
 import com.inventory.invtry.repository.InventoryRepository;
 import com.inventory.invtry.service.InventoryService;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class InventoryServiceImpl implements InventoryService {
@@ -52,6 +54,13 @@ public class InventoryServiceImpl implements InventoryService {
                         new ResourceNotFoundException("Inventory", "bookId", bookId));
 
         return mapToDto(inventory);
+    }
+
+    @Override
+    public List<InventoryResponseDto> getAllInventory() {
+        return inventoryRepository.findAll().stream()
+                .map(this::mapToDto)
+                .toList();
     }
 
     private InventoryResponseDto mapToDto(Inventory inventory) {

@@ -29,5 +29,8 @@ public class Book {
     @Column(length = 2000)
     private String description;
 
+    @Column(name = "cover_image_url", length = 500)
+    private String coverImageUrl;
+
     private boolean active = true;
 }

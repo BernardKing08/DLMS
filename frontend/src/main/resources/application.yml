@@ -1,0 +1,61 @@
+server:
+  port: 8073
+  forward-headers-strategy: framework
+spring:
+  application:
+    name: "frontend"
+  profiles:
+    active: "prod"
+  config:
+    import: "optional:configserver:http://configserver:8071/"
+  thymeleaf:
+    cache: false
+
+services:
+  auth:
+    url: http://authentication
+  account:
+    url: http://account
+  catalog:
+    url: http://catalog
+  inventory:
+    url: http://inventory
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name},%X{correlationId}]"
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+info:
+  app:
+    name: "frontend"
+    description: "DLMS - Frontend Service"
+    version: "1.0.0"

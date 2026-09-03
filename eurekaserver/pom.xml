@@ -81,7 +81,7 @@
 					</from>
 					<to>
 						<!-- Must match the image name in docker-compose.yml -->
-						<image>bernardking08/eureka-server:cc1</image>
+						<image>bernardking08/eureka-server:cc2</image>
 					</to>
 					<container>
 						<ports>

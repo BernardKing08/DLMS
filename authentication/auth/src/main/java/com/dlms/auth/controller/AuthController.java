@@ -41,19 +41,17 @@ public class AuthController {
     }
 
     /**
-     * Authenticates a user (credentials validation only for now)
+     * Authenticates a user and returns their identity, so callers (e.g. the
+     * frontend) know who just logged in without a separate lookup.
      */
     @PostMapping("/login")
-    public ResponseEntity<ResponseDto> login(
+    public ResponseEntity<UserResponseDto> login(
             @Valid @RequestBody LoginRequest request
     ) {
-        authService.authenticate(request);
+        User user = authService.authenticate(request);
 
         return ResponseEntity.ok(
-                new ResponseDto(
-                        AuthConstants.STATUS_200,
-                        AuthConstants.MESSAGE_200
-                )
+                new UserResponseDto(user.getId(), user.getName(), user.getEmail(), user.getRole().getRoleName())
         );
     }
 
@@ -65,7 +63,7 @@ public class AuthController {
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
         User user = authService.getUserById(id);
         return ResponseEntity.ok(
-                new UserResponseDto(user.getId(), user.getName(), user.getEmail())
+                new UserResponseDto(user.getId(), user.getName(), user.getEmail(), user.getRole().getRoleName())
         );
     }
 }

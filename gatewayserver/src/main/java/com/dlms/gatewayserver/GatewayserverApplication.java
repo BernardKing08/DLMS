@@ -32,9 +32,13 @@ public class GatewayserverApplication {
 				.uri("lb://CATALOG"))
 			.route(p -> p.path("/dlms/inventory/**")
 				.filters(f -> f.rewritePath("/dlms/inventory/(?<segment>.*)", "/${segment}")
-				.addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
 				.addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
 				.uri("lb://INVENTORY"))
+			// Catch-all, must stay LAST - routes match top-to-bottom, first
+			// match wins. Anything not matched by the /dlms/* API routes
+			// above (pages, static assets) falls through to the frontend.
+			.route(p -> p.path("/**")
+				.uri("lb://FRONTEND"))
 			.build();
 	}
 
