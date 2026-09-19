@@ -15,4 +15,4 @@ CREATE TABLE IF NOT EXISTS books (
 -- backfills the column on those pre-existing tables. No-op either way once
 -- it's already present, whether from a fresh CREATE or a prior run of this
 -- same ALTER.
-ALTER TABLE books ADD COLUMN IF NOT EXISTS cover_image_url VARCHAR(500);
+-- ALTER TABLE books ADD COLUMN IF NOT EXISTS cover_image_url VARCHAR(500);
