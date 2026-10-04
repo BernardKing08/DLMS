@@ -1,0 +1,103 @@
+<header id="header-v1"
+        th:fragment="siteHeader(currentPage, innerPage)"
+        th:class="${innerPage} ? 'navbar-wrapper inner-navbar-wrapper' : 'navbar-wrapper'">
+    <div class="container">
+        <div class="row">
+            <nav class="navbar navbar-default">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="navbar-header">
+                            <div class="navbar-brand">
+                                <h1>
+                                    <a th:href="@{/}">
+                                        <img th:src="@{/images/libraria-logo-v1.png}" alt="LIBRARIA" />
+                                    </a>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="header-topbar hidden-sm hidden-xs">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="topbar-info">
+                                        <a href="tel:+61-3-8376-6284"><i class="fa fa-phone"></i>+61-3-8376-6284</a>
+                                        <span>/</span>
+                                        <a href="mailto:support@libraria.com"><i class="fa fa-envelope"></i>support@libraria.com</a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="topbar-links">
+                                        <span th:if="${loggedIn}">
+                                            <a th:href="@{/account}"><i class="fa fa-user"></i> <span th:text="'Hi, ' + ${userName}">Hi, User</span></a>
+                                            <span th:if="${isAdmin}">
+                                                <span>|</span>
+                                                <a th:href="@{/admin/inventory}"><i class="fa fa-cogs"></i> Admin</a>
+                                            </span>
+                                            <span>|</span>
+                                            <a th:href="@{/logout}"><i class="fa fa-sign-out"></i> Logout</a>
+                                        </span>
+                                        <span th:unless="${loggedIn}">
+                                            <a th:href="@{/signin}"><i class="fa fa-lock"></i>Login / Register</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="navbar-collapse hidden-sm hidden-xs">
+                            <ul class="nav navbar-nav">
+                                <li th:classappend="${currentPage == 'home'} ? 'active' : ''">
+                                    <a th:href="@{/}">Home</a>
+                                </li>
+                                <li th:classappend="${currentPage == 'books'} ? 'active' : ''">
+                                    <a th:href="@{/books}">Books &amp; Media</a>
+                                </li>
+                                <li th:classappend="${currentPage == 'news'} ? 'active' : ''">
+                                    <a th:href="@{/news-events}">News &amp; Events</a>
+                                </li>
+                                <li class="dropdown" th:classappend="${currentPage == 'pages'} ? 'active' : ''">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a th:href="@{/cart}">Borrowing Cart</a></li>
+                                        <li><a th:href="@{/checkout}">Checkout Request</a></li>
+                                        <li><a th:href="@{/services}">Services</a></li>
+                                    </ul>
+                                </li>
+                                <li th:classappend="${currentPage == 'contact'} ? 'active' : ''">
+                                    <a th:href="@{/contact}">Contact</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mobile-menu hidden-lg hidden-md">
+                        <a href="#mobile-menu" aria-label="Open navigation"><i class="fa fa-navicon"></i></a>
+                        <div id="mobile-menu">
+                            <ul>
+                                <li class="mobile-title">
+                                    <h4>Navigation</h4>
+                                    <a href="#" class="close" aria-label="Close navigation"></a>
+                                </li>
+                                <li><a th:href="@{/}">Home</a></li>
+                                <li><a th:href="@{/books}">Books &amp; Media</a></li>
+                                <li><a th:href="@{/news-events}">News &amp; Events</a></li>
+                                <li>
+                                    <a href="#">Pages</a>
+                                    <ul>
+                                        <li><a th:href="@{/cart}">Borrowing Cart</a></li>
+                                        <li><a th:href="@{/checkout}">Checkout Request</a></li>
+                                        <li><a th:href="@{/services}">Services</a></li>
+                                    </ul>
+                                </li>
+                                <li><a th:href="@{/contact}">Contact</a></li>
+                                <li th:if="${loggedIn}"><a th:href="@{/account}">My Account</a></li>
+                                <li th:if="${loggedIn and isAdmin}"><a th:href="@{/admin/inventory}">Admin Inventory</a></li>
+                                <li th:if="${loggedIn}"><a th:href="@{/logout}">Logout</a></li>
+                                <li th:unless="${loggedIn}"><a th:href="@{/signin}">Sign in / Register</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>

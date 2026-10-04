@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1">
+    <title>Borrowing Cart - Libraria</title>
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/css/mmenu.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/css/mmenu.positioning.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <header id="header-v1" th:replace="~{fragments/header :: siteHeader('pages', true)}"></header>
+    <section class="page-banner services-banner">
+        <div class="container">
+            <div class="banner-header">
+                <h2>Borrowing Cart</h2>
+                <span class="underline center"></span>
+                <p class="lead">Review titles before proceeding to checkout.</p>
+            </div>
+            <div class="breadcrumb">
+                <ul>
+                    <li><a th:href="@{/}">Home</a></li>
+                    <li>Borrowing Cart</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <div class="site-content">
+        <main class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="alert alert-success" th:if="${cartMessage}" th:text="${cartMessage}"></p>
+                    <p class="alert alert-danger" th:if="${cartError}" th:text="${cartError}"></p>
+                    <p class="alert alert-info">
+                        This cart holds your temporary selection while browsing. Copies are reserved upon completing checkout.
+                    </p>
+                    <div th:if="${books.isEmpty()}">
+                        <h3>Your borrowing cart is empty</h3>
+                        <p>Browse the catalog and add available titles to borrow.</p>
+                        <a class="btn btn-primary" th:href="@{/books}">Browse Books</a>
+                    </div>
+                    <div th:unless="${books.isEmpty()}">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Author</th>
+                                        <th>Availability</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="book : ${books}">
+                                        <td><a th:href="@{/books/{id}(id=${book.id})}" th:text="${book.title}">Book title</a></td>
+                                        <td th:text="${book.author}">Author</td>
+                                        <td>
+                                            <span th:if="${book.active and book.availableCopies > 0}"
+                                                  th:text="${book.availableCopies} + ' copies currently available'">Available</span>
+                                            <span class="text-danger" th:unless="${book.active and book.availableCopies > 0}">
+                                                Currently unavailable
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <form th:action="@{/cart/remove/{bookId}(bookId=${book.id})}" method="post">
+                                                <button class="btn btn-default" type="submit">Remove</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <a class="btn btn-default" th:href="@{/books}">Continue Browsing</a>
+                        <a class="btn btn-primary" th:href="@{/checkout}">Proceed to Checkout</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <footer class="site-footer" th:replace="~{fragments/footer :: siteFooter}"></footer>
+    <script th:src="@{/js/jquery-1.12.4.min.js}"></script>
+    <script th:src="@{/js/jquery-ui.min.js}"></script>
+    <script th:src="@{/js/jquery.easing.1.3.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/mmenu.min.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -21,6 +21,12 @@ public class StaticPageController {
         return "contact";
     }
 
+    @GetMapping("/services")
+    public String services(Model model, HttpSession session) {
+        SessionUser.addToModel(session, model);
+        return "services";
+    }
+
     @GetMapping("/news-events")
     public String newsEventsList(Model model, HttpSession session) {
         SessionUser.addToModel(session, model);

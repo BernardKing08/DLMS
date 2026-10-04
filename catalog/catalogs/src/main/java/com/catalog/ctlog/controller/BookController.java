@@ -2,6 +2,7 @@ package com.catalog.ctlog.controller;
 
 import com.catalog.ctlog.dto.BookRequestDto;
 import com.catalog.ctlog.dto.BookResponseDto;
+import com.catalog.ctlog.dto.BookUpdateRequestDto;
 import com.catalog.ctlog.service.BookService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -34,5 +35,17 @@ public class BookController {
     @GetMapping
     public ResponseEntity<List<BookResponseDto>> getAllBooks() {
         return ResponseEntity.ok(bookService.getAllBooks());
+    }
+
+    /**
+     * Updates an existing book's metadata and/or active status.
+     * The {@code active} flag can be used to deactivate a title so it
+     * no longer appears as borrowable without deleting it from the catalog.
+     */
+    @PatchMapping("/{id}")
+    public ResponseEntity<BookResponseDto> updateBook(
+            @PathVariable Long id,
+            @Valid @RequestBody BookUpdateRequestDto request) {
+        return ResponseEntity.ok(bookService.updateBook(id, request));
     }
 }

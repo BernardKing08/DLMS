@@ -1,8 +1,10 @@
 package com.dlms.frontend.client;
 
 import com.dlms.frontend.dto.BookResponseDto;
+import com.dlms.frontend.dto.BookUpdateRequestDto;
 import com.dlms.frontend.exception.ResourceNotFoundException;
 import com.dlms.frontend.exception.ServiceUnavailableException;
+import com.dlms.frontend.exception.ValidationException;
 import com.dlms.frontend.filter.CorrelationIdFilter;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,8 +67,32 @@ public class CatalogClient {
         }
     }
 
+    /**
+     * Updates book metadata and/or the active flag via PATCH /api/catalog/{id}.
+     * Used by admin pages to edit titles or deactivate books from public view.
+     */
+    public BookResponseDto patchBook(Long id, BookUpdateRequestDto request) {
+        String correlationId = currentCorrelationId();
+        try {
+            return webClient.patch()
+                    .uri("/api/catalog/{id}", id)
+                    .header(CorrelationIdFilter.CORRELATION_ID_HEADER, correlationId)
+                    .bodyValue(request)
+                    .retrieve()
+                    .bodyToMono(BookResponseDto.class)
+                    .block();
+        } catch (WebClientResponseException.NotFound ex) {
+            throw new ResourceNotFoundException("Book", "id", id);
+        } catch (WebClientResponseException.BadRequest ex) {
+            throw new ValidationException("Invalid book update request.");
+        } catch (WebClientResponseException.ServiceUnavailable | WebClientRequestException ex) {
+            throw new ServiceUnavailableException("Catalog", ex.getMessage());
+        }
+    }
+
     private String currentCorrelationId() {
         String correlationId = MDC.get(CorrelationIdFilter.MDC_KEY);
         return correlationId != null ? correlationId : "unknown";
     }
 }
+

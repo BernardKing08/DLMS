@@ -32,7 +32,7 @@ public class CatalogClient {
         }
         try {
             return webClient.get()
-                    .uri("/api/catalog.ctlog/{id}", bookId)
+                    .uri("/api/catalog/{id}", bookId)
                     .header(CorrelationIdFilter.CORRELATION_ID_HEADER, correlationId)
                     .retrieve()
                     .bodyToMono(CatalogBookResponseDto.class)

@@ -2,15 +2,14 @@
 -- is safe to re-run on every startup (spring.sql.init.mode: always) without
 -- colliding with manually-created books or duplicating rows on restart.
 --
--- cover_image_url cycles through the 12 stock cover images already bundled
--- in the frontend (static/images/books-media/gird-view/) - there's no real
--- per-title cover art in this system, just enough visual variety that the
--- catalog grid doesn't show one identical image for every book.
+-- The bundled theme covers below are initial values; all seeded rows are
+-- replaced with ISBN-specific Open Library cover URLs at the end of this
+-- script.
 
 INSERT IGNORE INTO books (id, title, author, isbn, category, description, cover_image_url, active) VALUES
 (1001, 'The Great Gatsby', 'F. Scott Fitzgerald', '9780743273565', 'Classic Literature', 'A tragic tale of wealth, love, and the American Dream in the Jazz Age.', '/images/books-media/gird-view/book-media-grid-01.jpg', TRUE),
 (1002, 'Pride and Prejudice', 'Jane Austen', '9780141439518', 'Classic Literature', 'Elizabeth Bennet navigates love and reputation in Georgian England.', '/images/books-media/gird-view/book-media-grid-02.jpg', TRUE),
-(1003, 'Moby-Dick', 'Herman Melville', '9781503280786', 'Classic Literature', 'Captain Ahab''s obsessive hunt for the great white whale.', '/images/books-media/gird-view/book-media-grid-03.jpg', TRUE),
+(1003, 'Moby-Dick', 'Herman Melville', '9781987650075', 'Classic Literature', 'Captain Ahab''s obsessive hunt for the great white whale.', '/images/books-media/gird-view/book-media-grid-03.jpg', TRUE),
 (1004, 'Jane Eyre', 'Charlotte Bronte', '9780142437209', 'Classic Literature', 'An orphan''s journey through hardship to independence and love.', '/images/books-media/gird-view/book-media-grid-04.jpg', TRUE),
 (1005, 'Wuthering Heights', 'Emily Bronte', '9780141439556', 'Classic Literature', 'A tale of passion and revenge on the Yorkshire moors.', '/images/books-media/gird-view/book-media-grid-05.jpg', TRUE),
 (1006, 'War and Peace', 'Leo Tolstoy', '9781400079988', 'Classic Literature', 'Epic account of Russian society during the Napoleonic wars.', '/images/books-media/gird-view/book-media-grid-06.jpg', TRUE),
@@ -31,13 +30,13 @@ INSERT IGNORE INTO books (id, title, author, isbn, category, description, cover_
 (1024, 'Mistborn', 'Brandon Sanderson', '9780765311788', 'Fantasy', 'A street urchin discovers she can wield the magic of Allomancy.', '/images/books-media/gird-view/book-media-grid-07.jpg', TRUE),
 (1025, 'The Chronicles of Narnia', 'C.S. Lewis', '9780066238500', 'Fantasy', 'Children discover a magical land through the back of a wardrobe.', '/images/books-media/gird-view/book-media-grid-08.jpg', TRUE),
 
-(1030, 'Sherlock Holmes: A Study in Scarlet', 'Arthur Conan Doyle', '9781420951875', 'Mystery & Thriller', 'The first case that introduces the world''s greatest detective.', '/images/books-media/gird-view/book-media-grid-09.jpg', TRUE),
+(1030, 'A Study in Scarlet and The Sign of the Four', 'Arthur Conan Doyle', '9781426455285', 'Mystery & Thriller', 'Two early Sherlock Holmes mysteries featuring the world''s best-known consulting detective.', '/images/books-media/gird-view/book-media-grid-09.jpg', TRUE),
 (1031, 'And Then There Were None', 'Agatha Christie', '9780062073488', 'Mystery & Thriller', 'Ten strangers are lured to an island and murdered one by one.', '/images/books-media/gird-view/book-media-grid-10.jpg', TRUE),
 (1032, 'Gone Girl', 'Gillian Flynn', '9780307588364', 'Mystery & Thriller', 'A woman disappears on her wedding anniversary under suspicious circumstances.', '/images/books-media/gird-view/book-media-grid-11.jpg', TRUE),
-(1033, 'The Girl with the Dragon Tattoo', 'Stieg Larsson', '9780307949486', 'Mystery & Thriller', 'A journalist and a hacker investigate a decades-old disappearance.', '/images/books-media/gird-view/book-media-grid-12.jpg', TRUE),
+(1033, 'The Girl with the Dragon Tattoo', 'Stieg Larsson', '9780307473479', 'Mystery & Thriller', 'A journalist and a hacker investigate a decades-old disappearance.', '/images/books-media/gird-view/book-media-grid-12.jpg', TRUE),
 (1034, 'The Da Vinci Code', 'Dan Brown', '9780307474278', 'Mystery & Thriller', 'A symbologist uncovers a religious conspiracy hidden in art.', '/images/books-media/gird-view/book-media-grid-01.jpg', TRUE),
 
-(1040, 'Pride, Prejudice and Romance', 'Various Authors', '9780000000001', 'Romance', 'A collection of beloved romantic classics.', '/images/books-media/gird-view/book-media-grid-02.jpg', TRUE),
+(1040, 'The Time Traveler''s Wife', 'Audrey Niffenegger', '9780156029438', 'Romance', 'A love story shaped by a man''s involuntary journeys through time.', '/images/books-media/gird-view/book-media-grid-02.jpg', TRUE),
 (1041, 'Outlander', 'Diana Gabaldon', '9780440212560', 'Romance', 'A nurse from 1945 is swept back in time to 18th-century Scotland.', '/images/books-media/gird-view/book-media-grid-03.jpg', TRUE),
 (1042, 'The Notebook', 'Nicholas Sparks', '9780446605236', 'Romance', 'A lifelong love story told through the pages of a notebook.', '/images/books-media/gird-view/book-media-grid-04.jpg', TRUE),
 
@@ -70,11 +69,29 @@ INSERT IGNORE INTO books (id, title, author, isbn, category, description, cover_
 (1102, 'Harry Potter and the Sorcerer''s Stone', 'J.K. Rowling', '9780590353427', 'Young Adult', 'An orphan discovers he is a wizard destined for greatness.', '/images/books-media/gird-view/book-media-grid-02.jpg', TRUE),
 
 (1110, 'Leaves of Grass', 'Walt Whitman', '9781580495929', 'Poetry', 'A celebrated collection celebrating democracy, nature, and the self.', '/images/books-media/gird-view/book-media-grid-03.jpg', TRUE),
-(1111, 'The Waste Land and Other Poems', 'T.S. Eliot', '9780156948757', 'Poetry', 'A landmark modernist poem on disillusionment after the First World War.', '/images/books-media/gird-view/book-media-grid-04.jpg', TRUE),
+(1111, 'The Waste Land and Other Poems', 'T. S. Eliot', '9780142437315', 'Poetry', 'A landmark modernist poem on disillusionment after the First World War.', '/images/books-media/gird-view/book-media-grid-04.jpg', TRUE),
 
 (1120, 'Dracula', 'Bram Stoker', '9780486411095', 'Horror', 'The vampire count Dracula terrorizes Victorian England.', '/images/books-media/gird-view/book-media-grid-05.jpg', TRUE),
 (1121, 'Frankenstein', 'Mary Shelley', '9780486282114', 'Horror', 'A scientist''s creation turns monstrous in this gothic classic.', '/images/books-media/gird-view/book-media-grid-06.jpg', TRUE),
 (1122, 'The Shining', 'Stephen King', '9780307743657', 'Horror', 'A family''s winter at an isolated hotel descends into supernatural terror.', '/images/books-media/gird-view/book-media-grid-07.jpg', TRUE);
+
+-- Correct existing seed rows from earlier runs. INSERT IGNORE above leaves
+-- them untouched, so update only when the row still has its old seed ISBN.
+UPDATE books SET isbn = '9781987650075', cover_image_url = '/images/books-media/gird-view/book-media-grid-03.jpg'
+WHERE id = 1003 AND isbn = '9781503280786';
+UPDATE books SET title = 'A Study in Scarlet and The Sign of the Four',
+    description = 'Two early Sherlock Holmes mysteries featuring the world''s best-known consulting detective.',
+    isbn = '9781426455285', cover_image_url = '/images/books-media/gird-view/book-media-grid-09.jpg'
+WHERE id = 1030 AND isbn = '9781420951875';
+UPDATE books SET isbn = '9780307473479', cover_image_url = '/images/books-media/gird-view/book-media-grid-12.jpg'
+WHERE id = 1033 AND isbn = '9780307949486';
+UPDATE books SET title = 'The Time Traveler''s Wife', author = 'Audrey Niffenegger',
+    description = 'A love story shaped by a man''s involuntary journeys through time.',
+    isbn = '9780156029438', cover_image_url = '/images/books-media/gird-view/book-media-grid-02.jpg'
+WHERE id = 1040 AND isbn = '9780000000001';
+UPDATE books SET author = 'T. S. Eliot', isbn = '9780142437315',
+    cover_image_url = '/images/books-media/gird-view/book-media-grid-04.jpg'
+WHERE id = 1111 AND isbn = '9780156948757';
 
 -- Backfill cover_image_url for these same books if they already existed
 -- (from a run before this column existed) - INSERT IGNORE above only
@@ -91,3 +108,29 @@ UPDATE books SET cover_image_url = '/images/books-media/gird-view/book-media-gri
 UPDATE books SET cover_image_url = '/images/books-media/gird-view/book-media-grid-10.jpg' WHERE id IN (1012, 1031, 1055, 1091) AND cover_image_url IS NULL;
 UPDATE books SET cover_image_url = '/images/books-media/gird-view/book-media-grid-11.jpg' WHERE id IN (1013, 1032, 1060, 1092) AND cover_image_url IS NULL;
 UPDATE books SET cover_image_url = '/images/books-media/gird-view/book-media-grid-12.jpg' WHERE id IN (1014, 1033, 1061, 1100) AND cover_image_url IS NULL;
+
+-- Resolve real cover art by ISBN. Restrict the update to known seed ISBNs
+-- with a bundled placeholder so user-created or manually corrected covers
+-- are preserved.
+UPDATE books
+SET cover_image_url = CONCAT('https://covers.openlibrary.org/b/isbn/', isbn, '-M.jpg?default=false')
+WHERE isbn IN (
+    '9780743273565', '9780141439518', '9781987650075', '9780142437209',
+    '9780141439556', '9781400079988', '9780143035008', '9780451524935',
+    '9780060850524', '9780441172719', '9780553293357', '9780441569595',
+    '9780553418026', '9781451673319', '9780547928227', '9780547928210',
+    '9780553593716', '9780756404079', '9780765311788', '9780066238500',
+    '9781426455285', '9780062073488', '9780307588364', '9780307473479',
+    '9780307474278', '9780440212560', '9780446605236', '9780062316097',
+    '9780399590504', '9780374533557', '9781400052189', '9780735211292',
+    '9781982137274', '9781451648539', '9780553296983', '9780316548182',
+    '9780393354324', '9780062397348', '9780345476098', '9780553380163',
+    '9780345539434', '9780198788607', '9780618249060', '9780061124952',
+    '9780064431781', '9780142410370', '9780439023528', '9780525478812',
+    '9780590353427', '9781580495929', '9780142437315', '9780486411095',
+    '9780486282114', '9780307743657', '9780156029438'
+)
+AND (
+    cover_image_url IS NULL
+    OR cover_image_url LIKE '/images/books-media/gird-view/book-media-grid-%.jpg'
+);

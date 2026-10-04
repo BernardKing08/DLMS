@@ -12,7 +12,11 @@ $services = @(
     @{ Name = "account";   Path = "C:\Users\HomePC\Desktop\Spring_Projects\DLMS\account\acc" },
     @{ Name = "auth";      Path = "C:\Users\HomePC\Desktop\Spring_Projects\DLMS\authentication\auth" },
     @{ Name = "catalog";   Path = "C:\Users\HomePC\Desktop\Spring_Projects\DLMS\catalog\catalogs" },
-    @{ Name = "inventory"; Path = "C:\Users\HomePC\Desktop\Spring_Projects\DLMS\inventory\invtry" }
+    @{ Name = "inventory"; Path = "C:\Users\HomePC\Desktop\Spring_Projects\DLMS\inventory\invtry" },
+    @{ Name = "frontend"; Path = "C:\Users\HomePC\Desktop\Spring_Projects\DLMS\frontend" }
+    @{ Name = "configServer"; Path = "C:\Users\HomePC\Desktop\Spring_Projects\DLMS\configServer" }
+    @{ Name = "eurekaserver"; Path = "C:\Users\HomePC\Desktop\Spring_Projects\DLMS\eurekaserver" }
+    
 )
 
 foreach ($svc in $services) {

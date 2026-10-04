@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1">
+    <title>Borrowing Request - Libraria</title>
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/css/mmenu.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/css/mmenu.positioning.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <header id="header-v1" th:replace="~{fragments/header :: siteHeader('pages', true)}"></header>
+    <section class="page-banner services-banner">
+        <div class="container">
+            <div class="banner-header">
+                <h2>Borrowing Request</h2>
+                <span class="underline center"></span>
+                <p class="lead">Complete your request to borrow titles from the library.</p>
+            </div>
+            <div class="breadcrumb">
+                <ul>
+                    <li><a th:href="@{/}">Home</a></li>
+                    <li><a th:href="@{/cart}">Borrowing Cart</a></li>
+                    <li>Request</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <div class="site-content">
+        <main class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div th:if="${borrowError}" class="alert alert-danger" th:text="${borrowError}"></div>
+                    <p class="alert alert-info">
+                        Provide your preferred pickup location and any optional notes. Confirming your request will
+                        place your borrowing order and reserve copies in the library inventory.
+                    </p>
+                    <p class="alert alert-warning" th:if="${hasUnavailableBooks}">
+                        One or more titles are no longer available. Remove them from your cart before proceeding.
+                    </p>
+                    <div th:if="${#fields.hasErrors('requestForm.*')}" class="alert alert-danger">
+                        Please correct the highlighted details.
+                    </div>
+                    <form th:action="@{/checkout}" th:object="${requestForm}" method="post">
+                        <div class="form-group">
+                            <label for="name">Your name</label>
+                            <input id="name" class="form-control" type="text" th:field="*{name}" required>
+                            <span class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input id="email" class="form-control" type="email" th:field="*{email}" required>
+                            <span class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="pickupLocation">Preferred pickup location</label>
+                            <input id="pickupLocation" class="form-control" type="text" th:field="*{pickupLocation}" placeholder="e.g. Central Library Branch" required>
+                            <span class="text-danger" th:if="${#fields.hasErrors('pickupLocation')}" th:errors="*{pickupLocation}"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Notes (optional)</label>
+                            <textarea id="notes" class="form-control" rows="4" th:field="*{notes}" placeholder="Any special requests or pickup instructions"></textarea>
+                        </div>
+                        <button class="btn btn-primary" type="submit" th:disabled="${hasUnavailableBooks}">
+                            Confirm &amp; Borrow Books
+                        </button>
+                        <a class="btn btn-default" th:href="@{/cart}">Back to Cart</a>
+                    </form>
+                </div>
+                <div class="col-md-4">
+                    <h3>Requested Titles</h3>
+                    <ul class="list-group">
+                        <li class="list-group-item" th:each="book : ${books}">
+                            <a th:href="@{/books/{id}(id=${book.id})}" th:text="${book.title}">Book title</a>
+                            <span class="small" th:text="${book.availableCopies > 0} ? 'Available now' : 'Unavailable'">Status</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+    <footer class="site-footer" th:replace="~{fragments/footer :: siteFooter}"></footer>
+    <script th:src="@{/js/jquery-1.12.4.min.js}"></script>
+    <script th:src="@{/js/jquery-ui.min.js}"></script>
+    <script th:src="@{/js/jquery.easing.1.3.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/mmenu.min.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

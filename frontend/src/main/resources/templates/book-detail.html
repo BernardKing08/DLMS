@@ -43,158 +43,7 @@
     <body>
 
         <!-- Start: Header Section -->
-        <header id="header-v1" class="navbar-wrapper inner-navbar-wrapper">
-            <div class="container">
-                <div class="row">
-                    <nav class="navbar navbar-default">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="navbar-header">
-                                    <div class="navbar-brand">
-                                        <h1>
-                                            <a th:href="@{/}">
-                                                <img th:src="@{/images/libraria-logo-v1.png}" alt="LIBRARIA" />
-                                            </a>
-                                        </h1>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-9">
-                                <!-- Header Topbar -->
-                                <div class="header-topbar hidden-sm hidden-xs">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="topbar-info">
-                                                <a href="tel:+61-3-8376-6284"><i class="fa fa-phone"></i>+61-3-8376-6284</a>
-                                                <span>/</span>
-                                                <a href="mailto:support@libraria.com"><i class="fa fa-envelope"></i>support@libraria.com</a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="topbar-links">
-                                                <span th:if="${loggedIn}">
-                                                    <a th:href="@{/account}"><i class="fa fa-user"></i> <span th:text="'Hi, ' + ${userName}">Hi, User</span></a>
-                                                    <span th:if="${isAdmin}">
-                                                        <span>|</span>
-                                                        <a th:href="@{/admin/inventory}"><i class="fa fa-cogs"></i> Admin</a>
-                                                    </span>
-                                                    <span>|</span>
-                                                    <a th:href="@{/logout}"><i class="fa fa-sign-out"></i> Logout</a>
-                                                </span>
-                                                <span th:unless="${loggedIn}">
-                                                    <a th:href="@{/signin}"><i class="fa fa-lock"></i>Login / Register</a>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="navbar-collapse hidden-sm hidden-xs">
-                                    <ul class="nav navbar-nav">
-                                        <li class="dropdown active">
-                                            <a data-toggle="dropdown" class="dropdown-toggle disabled" th:href="@{/}">Home</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a th:href="@{/}">Home V1</a></li>
-                                                <li><a th:href="@{/}">Home V2</a></li>
-                                                <li><a th:href="@{/}">Home V3</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="dropdown">
-                                            <a data-toggle="dropdown" class="dropdown-toggle disabled" th:href="@{/books}">Books &amp; Media</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a th:href="@{/books}">Books &amp; Media List View</a></li>
-                                                <li><a th:href="@{/books}">Books &amp; Media Grid View V1</a></li>
-                                                <li><a th:href="@{/books}">Books &amp; Media Grid View V2</a></li>
-                                                <li><a th:href="@{/books}">Books &amp; Media Detail V1</a></li>
-                                                <li><a th:href="@{/books}">Books &amp; Media Detail V2</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="dropdown">
-                                            <a data-toggle="dropdown" class="dropdown-toggle disabled" th:href="@{/news-events}">News &amp; Events</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a th:href="@{/news-events}">News &amp; Events List View</a></li>
-                                                <li><a th:href="@{/news-events/1}">News &amp; Events Detail</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="dropdown">
-                                            <a data-toggle="dropdown" class="dropdown-toggle disabled" href="#">Pages</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Cart</a></li>
-                                                <li><a href="#">Checkout</a></li>
-                                                <li><a th:href="@{/signin}">Signin/Register</a></li>
-                                                <li><a th:href="@{/}">404/Error</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="dropdown">
-                                            <a data-toggle="dropdown" class="dropdown-toggle disabled" th:href="@{/news-events}">Blog</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a th:href="@{/news-events}">Blog Grid View</a></li>
-                                                <li><a th:href="@{/news-events}">Blog Detail</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="#">Services</a></li>
-                                        <li><a th:href="@{/contact}">Contact</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mobile-menu hidden-lg hidden-md">
-                            <a href="#mobile-menu"><i class="fa fa-navicon"></i></a>
-                            <div id="mobile-menu">
-                                <ul>
-                                    <li class="mobile-title">
-                                        <h4>Navigation</h4>
-                                        <a href="#" class="close"></a>
-                                    </li>
-                                    <li>
-                                        <a th:href="@{/}">Home</a>
-                                        <ul>
-                                            <li><a th:href="@{/}">Home V1</a></li>
-                                            <li><a th:href="@{/}">Home V2</a></li>
-                                            <li><a th:href="@{/}">Home V3</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a th:href="@{/books}">Books &amp; Media</a>
-                                        <ul>
-                                            <li><a th:href="@{/books}">Books &amp; Media List View</a></li>
-                                            <li><a th:href="@{/books}">Books &amp; Media Grid View V1</a></li>
-                                            <li><a th:href="@{/books}">Books &amp; Media Grid View V2</a></li>
-                                            <li><a th:href="@{/books}">Books &amp; Media Detail V1</a></li>
-                                            <li><a th:href="@{/books}">Books &amp; Media Detail V2</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a th:href="@{/news-events}">News &amp; Events</a>
-                                        <ul>
-                                            <li><a th:href="@{/news-events}">News &amp; Events List View</a></li>
-                                            <li><a th:href="@{/news-events/1}">News &amp; Events Detail</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">Pages</a>
-                                        <ul>
-                                            <li><a href="#">Cart</a></li>
-                                            <li><a href="#">Checkout</a></li>
-                                            <li><a th:href="@{/signin}">Signin/Register</a></li>
-                                            <li><a th:href="@{/}">404/Error</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a th:href="@{/news-events}">Blog</a>
-                                        <ul>
-                                            <li><a th:href="@{/news-events}">Blog Grid View</a></li>
-                                            <li><a th:href="@{/news-events}">Blog Detail</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Services</a></li>
-                                    <li><a th:href="@{/contact}">Contact</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </nav>
-                </div>
-            </div>
-        </header>
+        <header id="header-v1" th:replace="~{fragments/header :: siteHeader('books', true)}"></header>
         <!-- End: Header Section -->
 
         <!-- Start: Page Banner -->
@@ -275,7 +124,9 @@
                                         <div class="single-book-box">                                                
                                             <div class="post-thumbnail">
                                                 <div class="book-list-icon yellow-icon"></div>
-                                                <img alt="Book" th:src="@{${book.coverImageUrl} ?: '/images/books-media/gird-view/book-media-grid-01.jpg'}" />                                                    
+                                                <img th:alt="${book.title} + ' cover'"
+                                                     th:src="@{${book.coverImageUrl} ?: '/images/books-media/gird-view/book-media-grid-01.jpg'}"
+                                                     onerror="this.onerror=null;this.src='/images/books-media/gird-view/book-media-grid-01.jpg';" />
                                             </div>
                                             <div class="post-detail">
                                                 <div class="books-social-sharing">
@@ -290,7 +141,7 @@
                                                 <div class="optional-links">
                                                     <ul>
                                                         <li>
-                                                            <a href="#" target="_blank" data-toggle="blog-tags" data-placement="top" title="Add To Cart">
+                                                            <a th:href="@{/cart}" data-toggle="blog-tags" data-placement="top" title="Borrowing Cart">
                                                                 <i class="fa fa-shopping-cart"></i>
                                                             </a>
                                                         </li>
@@ -330,7 +181,13 @@
                                                     </ul>
                                                 </header>
                                                 <div class="entry-content post-buttons">
-                                                    <a href="#." class="btn btn-dark-gray">Place a Hold</a>
+                                                    <form th:action="@{/cart/add/{bookId}(bookId=${book.id})}" method="post">
+                                                        <button class="btn btn-dark-gray" type="submit"
+                                                                th:disabled="${!book.active or book.availableCopies < 1}">
+                                                            Add to Borrowing Cart
+                                                        </button>
+                                                    </form>
+                                                    <p class="text-danger" th:if="${cartError}" th:text="${cartError}"></p>
                                                     <a th:href="@{/books}" class="btn btn-dark-gray">Back to Catalog</a>
                                                 </div>
                                             </div>
@@ -991,107 +848,7 @@
         <!-- End: Social Network -->
 
         <!-- Start: Footer -->
-        <footer class="site-footer">
-            <div class="container">
-                <div id="footer-widgets">
-                    <div class="row">
-                        <div class="col-md-4 col-sm-6 widget-container">
-                            <div id="text-2" class="widget widget_text">
-                                <h3 class="footer-widget-title">About Libraria</h3>
-                                <span class="underline left"></span>
-                                <div class="textwidget">
-                                    It is a long established fact that a reader will be distracted by the readable content of a page when looking.
-                                </div>
-                                <address>
-                                    <div class="info">
-                                        <i class="fa fa-location-arrow"></i>
-                                        <span>21 King Street, Melbourne, Victoria 3000 Australia</span>
-                                    </div>
-                                    <div class="info">
-                                        <i class="fa fa-envelope"></i>
-                                        <span><a href="mailto:support@libraria.com">support@libraria.com</a></span>
-                                    </div>
-                                    <div class="info">
-                                        <i class="fa fa-phone"></i>
-                                        <span><a href="tel:012-345-6789">+ 012-345-6789</a></span>
-                                    </div>
-                                </address>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-sm-6 widget-container">
-                            <div id="nav_menu-2" class="widget widget_nav_menu">
-                                <h3 class="footer-widget-title">Quick Links</h3>
-                                <span class="underline left"></span>
-                                <div class="menu-quick-links-container">
-                                    <ul id="menu-quick-links" class="menu">
-                                        <li><a href="#">Library News</a></li>
-                                        <li><a href="#">History</a></li>
-                                        <li><a href="#">Meet Our Staff</a></li>
-                                        <li><a href="#">Board of Trustees</a></li>
-                                        <li><a href="#">Budget</a></li>
-                                        <li><a href="#">Annual Report</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="clearfix hidden-lg hidden-md hidden-xs tablet-margin-bottom"></div>
-                        <div class="col-md-2 col-sm-6 widget-container">
-                            <div id="text-4" class="widget widget_text">
-                                <h3 class="footer-widget-title">Timing</h3>
-                                <span class="underline left"></span>
-                                <div class="timming-text-widget">
-                                    <time datetime="2017-02-13">Mon - Thu: 9 am - 9 pm</time>
-                                    <time datetime="2017-02-13">Fri: 9 am - 6 pm</time>
-                                    <time datetime="2017-02-13">Sat: 9 am - 5 pm</time>
-                                    <time datetime="2017-02-13">Sun: 1 pm - 6 pm</time>
-                                    <ul>
-                                        <li><a href="#">Closings</a></li>
-                                        <li><a href="#">Branches</a></li>
-                                    </ul>
-                                </div>
-                            </div>			
-                        </div>
-                        <div class="col-md-4 col-sm-6 widget-container">
-                            <div class="widget twitter-widget">
-                                <h3 class="footer-widget-title">Latest Tweets</h3>
-                                <span class="underline left"></span>
-                                <div id="twitter-feed">
-                                    <ul>
-                                        <li>
-                                            <p><a href="#">@TemplateLibraria</a> Sed ut perspiciatis unde omnis iste natus error sit voluptatem. <a href="#">template-libraria.com</a></p>
-                                        </li>
-                                        <li>
-                                            <p><a href="#">@TemplateLibraria</a> Sed ut perspiciatis unde omnis iste natus error sit voluptatem. <a href="#">template-libraria.com</a></p>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>			
-                        </div>
-                    </div>
-                </div>                
-            </div>
-            <div class="sub-footer">
-                <div class="container">
-                    <div class="row">
-                        <div class="footer-text col-md-3">
-                            <p><a target="_blank" href="https://www.templateshub.net">Templates Hub</a></p>
-                        </div>
-                        <div class="col-md-9 pull-right">
-                            <ul>
-                                <li><a th:href="@{/}">Home</a></li>
-                                <li><a th:href="@{/books}">Books &amp; Media</a></li>
-                                <li><a th:href="@{/news-events}">News &amp; Events</a></li>
-                                <li><a href="#">Kids &amp; Teens</a></li>
-                                <li><a href="#">Services</a></li>
-                                <li><a href="#">Research</a></li>
-                                <li><a th:href="@{/news-events}">Blog</a></li>
-                                <li><a th:href="@{/contact}">Contact</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
+        <footer class="site-footer" th:replace="~{fragments/footer :: siteFooter}"></footer>
         <!-- End: Footer -->
 
         <!-- jQuery Latest Version 1.x -->

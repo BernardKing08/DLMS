@@ -3,6 +3,7 @@ package com.catalog.ctlog.service.impl;
 import com.catalog.ctlog.client.InventoryClient;
 import com.catalog.ctlog.dto.BookRequestDto;
 import com.catalog.ctlog.dto.BookResponseDto;
+import com.catalog.ctlog.dto.BookUpdateRequestDto;
 import com.catalog.ctlog.dto.InventoryResponseDto;
 import com.catalog.ctlog.exception.ResourceNotFoundException;
 import com.catalog.ctlog.modal.Book;
@@ -74,6 +75,24 @@ public class BookServiceImpl implements BookService {
                 .stream()
                 .map(this::enrichWithInventory)
                 .toList();
+    }
+
+    @Override
+    public BookResponseDto updateBook(Long id, BookUpdateRequestDto request) {
+
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
+
+        book.setTitle(request.getTitle());
+        book.setAuthor(request.getAuthor());
+        book.setIsbn(request.getIsbn());
+        book.setCategory(request.getCategory());
+        book.setDescription(request.getDescription());
+        book.setCoverImageUrl(request.getCoverImageUrl());
+        book.setActive(request.isActive());
+
+        Book saved = bookRepository.save(book);
+        return enrichWithInventory(saved);
     }
 
     private BookResponseDto enrichWithInventory(Book book) {

@@ -76,11 +76,16 @@ Server-rendered, not a JS single-page app — `@Controller` classes fetch data v
 | `GET /account` | `GET /api/accounts/{userId}` | Requires a session (redirects to `/signin` otherwise); shows a "still setting up" message instead of erroring if the profile hasn't finished auto-provisioning yet |
 | `POST /account` | `PUT /api/accounts/{userId}` | Updates profile fields |
 | `GET /logout` | — | Clears the session |
+| `GET /cart`, `POST /cart/add/{bookId}`, `POST /cart/remove/{bookId}` | Catalog availability | Session-scoped borrowing cart; selecting a title does not reserve copies |
+| `GET /checkout`, `POST /checkout` | Catalog availability | Prepares an email inquiry for the selected titles; the user must send it and the library must confirm availability |
+| `GET /services` | — | Informational overview of catalog, account, and borrowing inquiry features |
 | `GET /contact`, `/news-events`, `/news-events/{slug}` | — | Static informational pages — no backend service exists for contact/news content in this system, kept for site completeness |
 
 **Login/session note**: this backend has no JWT or token system — `/api/auth/login` validates credentials and returns who the user is (`id`/`name`/`email`), nothing more. The Frontend keeps "who's logged in" in a plain servlet `HttpSession`, scoped to the Frontend module only. That's enough for a server-rendered app but isn't a substitute for real authentication if this were ever public-facing.
 
-**Template origin**: pages started from the LIBRARIA HTML template (a bookstore theme) and were adapted to Thymeleaf — asset paths converted to `th:href="@{/css/...}"` etc., the fake cart/checkout widget removed (a borrowing system has no cart), the book grid/detail sections rewired to `th:each`/`th:text` against real `BookResponseDto` data, and the login/register forms rewired to real `LoginRequestDto`/`RegisterRequestDto` fields. The `/account` page has no equivalent in the original template — it's newly built, styled to match the rest of the site.
+**Template origin**: pages started from the LIBRARIA HTML template (a bookstore theme) and were adapted to Thymeleaf — asset paths converted to `th:href="@{/css/...}"` etc., the book grid/detail sections rewired to `th:each`/`th:text` against real `BookResponseDto` data, and the login/register forms rewired to real `LoginRequestDto`/`RegisterRequestDto` fields. The borrowing cart is session-scoped and prepares an email inquiry; it does not reserve stock because no reservation service exists yet. The `/account` page has no equivalent in the original template — it's newly built, styled to match the rest of the site.
+
+**Catalog cover images**: Every seeded book uses an ISBN-specific cover from the [Open Library Covers API](https://covers.openlibrary.org/). Seed ISBNs are checked against the cover service, and seed entries without a cover are replaced with a matching edition that has one. The frontend keeps a bundled fallback in case the remote image service is temporarily unavailable.
 
 ## Running locally
 
