@@ -1,11 +1,12 @@
-package com.inventory.invtry.modal;
+package com.inventory.invtry.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Table(name = "inventory")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

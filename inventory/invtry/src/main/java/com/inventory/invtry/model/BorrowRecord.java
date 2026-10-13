@@ -1,4 +1,4 @@
-package com.inventory.invtry.modal;
+package com.inventory.invtry.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,7 +7,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "borrow_records")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

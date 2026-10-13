@@ -1,6 +1,8 @@
 server:
   port: 8073
   forward-headers-strategy: framework
+  servlet:
+    context-path: /dlms
 spring:
   application:
     name: "frontend"

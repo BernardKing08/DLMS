@@ -16,7 +16,7 @@ public class GatewayserverApplication {
 	}
 
 	@Bean
-	public RouteLocator bennylibrary(RouteLocatorBuilder routeLocatorBuilder){
+	public RouteLocator dlmsRoutes(RouteLocatorBuilder routeLocatorBuilder){
 		return routeLocatorBuilder.routes()
 			.route(p -> p.path("/dlms/account/**")
 				.filters(f -> f.rewritePath("/dlms/account/(?<segment>.*)", "/${segment}")
@@ -38,6 +38,7 @@ public class GatewayserverApplication {
 			// match wins. Anything not matched by the /dlms/* API routes
 			// above (pages, static assets) falls through to the frontend.
 			.route(p -> p.path("/**")
+				.filters(f -> f.prefixPath("/dlms"))
 				.uri("lb://FRONTEND"))
 			.build();
 	}

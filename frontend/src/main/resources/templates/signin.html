@@ -77,19 +77,11 @@
                                                         <p th:if="${loginError}" th:text="${loginError}" style="color:#c0392b;"></p>
                                                         <form class="login" method="post" th:action="@{/signin/login}" th:object="${loginForm}">
                                                             <p class="form-row form-row-first input-required">
-                                                                <label>
-                                                                    <span class="first-letter">Email</span>
-                                                                    <span class="second-letter">*</span>
-                                                                </label>
-                                                                <input type="email" id="email" th:field="*{email}" class="input-text">
+                                                                <input type="email" id="email" th:field="*{email}" class="input-text" placeholder="Email *">
                                                                 <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:#c0392b;"></span>
                                                              </p>
                                                             <p class="form-row form-row-last input-required">
-                                                                <label>
-                                                                    <span class="first-letter">Password</span>
-                                                                    <span class="second-letter">*</span>
-                                                                </label>
-                                                                <input type="password" id="password" th:field="*{password}" class="input-text">
+                                                                <input type="password" id="password" th:field="*{password}" class="input-text" placeholder="Password *">
                                                                 <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:#c0392b;"></span>
                                                             </p>
                                                             <div class="clear"></div>
@@ -113,35 +105,19 @@
                                                         <p th:if="${registerError}" th:text="${registerError}" style="color:#c0392b;"></p>
                                                         <form class="login" method="post" th:action="@{/signin/register}" th:object="${registerForm}">
                                                             <p class="form-row form-row-first input-required">
-                                                                <label>
-                                                                    <span class="first-letter">Full Name</span>
-                                                                    <span class="second-letter">*</span>
-                                                                </label>
-                                                                <input type="text" id="name" th:field="*{name}" class="input-text">
+                                                                <input type="text" id="name" th:field="*{name}" class="input-text" placeholder="Full Name *">
                                                                 <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:#c0392b;"></span>
                                                             </p>
                                                             <p class="form-row input-required">
-                                                                <label>
-                                                                    <span class="first-letter">Email</span>
-                                                                    <span class="second-letter">*</span>
-                                                                </label>
-                                                                <input type="email" id="email1" th:field="*{email}" class="input-text">
+                                                                <input type="email" id="email1" th:field="*{email}" class="input-text" placeholder="Email *">
                                                                 <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:#c0392b;"></span>
                                                             </p>
                                                             <p class="form-row input-required">
-                                                                <label>
-                                                                    <span class="first-letter">Password</span>
-                                                                    <span class="second-letter">*</span>
-                                                                </label>
-                                                                <input type="password" id="password1" th:field="*{password}" class="input-text">
+                                                                <input type="password" id="password1" th:field="*{password}" class="input-text" placeholder="Password *">
                                                                 <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:#c0392b;"></span>
                                                             </p>
                                                             <p class="form-row input-required">
-                                                                <label>
-                                                                    <span class="first-letter">Confirm Password</span>
-                                                                    <span class="second-letter">*</span>
-                                                                </label>
-                                                                <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="input-text">
+                                                                <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="input-text" placeholder="Confirm Password *">
                                                                 <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" style="color:#c0392b;"></span>
                                                             </p>
                                                             <div class="clear"></div>
@@ -168,7 +144,7 @@
                 <div class="center-content">
                     <h2 class="section-title">Follow Us</h2>
                     <span class="underline center"></span>
-                    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p class="lead">Explore the catalog and discover books to borrow.</p>
                 </div>
                 <ul>
                     <li>

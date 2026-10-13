@@ -70,12 +70,15 @@ public class InventoryClient {
             return webClient.post()
                     .uri("/api/inventory/borrow")
                     .header(CorrelationIdFilter.CORRELATION_ID_HEADER, currentCorrelationId())
+                    .header("X-User-Id", String.valueOf(userId))
                     .bodyValue(request)
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<List<BorrowRecordDto>>() {})
                     .block();
         } catch (WebClientResponseException.BadRequest ex) {
             throw new ValidationException(extractMessage(ex, "Failed to complete borrowing request."));
+        } catch (WebClientResponseException.Forbidden ex) {
+            throw new ValidationException(extractMessage(ex, "You are not allowed to complete that borrowing request."));
         } catch (WebClientResponseException.ServiceUnavailable | WebClientRequestException ex) {
             throw new ServiceUnavailableException("Inventory", ex.getMessage());
         }
@@ -86,30 +89,36 @@ public class InventoryClient {
             return webClient.get()
                     .uri("/api/inventory/loans/user/{userId}", userId)
                     .header(CorrelationIdFilter.CORRELATION_ID_HEADER, currentCorrelationId())
+                    .header("X-User-Id", String.valueOf(userId))
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<List<BorrowRecordDto>>() {})
                     .block();
+        } catch (WebClientResponseException.Forbidden ex) {
+            throw new ValidationException(extractMessage(ex, "You can only view your own borrowing history."));
         } catch (WebClientResponseException.ServiceUnavailable | WebClientRequestException ex) {
             throw new ServiceUnavailableException("Inventory", ex.getMessage());
         }
     }
 
-    public BorrowRecordDto returnBook(Long loanId) {
+    public BorrowRecordDto returnBook(Long currentUserId, Long loanId) {
         try {
             return webClient.post()
                     .uri("/api/inventory/loans/{id}/return", loanId)
                     .header(CorrelationIdFilter.CORRELATION_ID_HEADER, currentCorrelationId())
+                    .header("X-User-Id", String.valueOf(currentUserId))
                     .retrieve()
                     .bodyToMono(BorrowRecordDto.class)
                     .block();
         } catch (WebClientResponseException.BadRequest ex) {
             throw new ValidationException(extractMessage(ex, "Failed to return book."));
+        } catch (WebClientResponseException.Forbidden ex) {
+            throw new ValidationException(extractMessage(ex, "You can only return your own borrowed books."));
         } catch (WebClientResponseException.ServiceUnavailable | WebClientRequestException ex) {
             throw new ServiceUnavailableException("Inventory", ex.getMessage());
         }
     }
 
-    private String extractMessage(WebClientResponseException.BadRequest ex, String fallback) {
+    private String extractMessage(WebClientResponseException ex, String fallback) {
         try {
             BackendErrorDto error = ex.getResponseBodyAs(BackendErrorDto.class);
             return (error != null && error.getErrorMsg() != null) ? error.getErrorMsg() : fallback;

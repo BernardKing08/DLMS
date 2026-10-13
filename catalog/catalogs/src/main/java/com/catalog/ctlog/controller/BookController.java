@@ -1,6 +1,7 @@
 package com.catalog.ctlog.controller;
 
 import com.catalog.ctlog.dto.BookRequestDto;
+import com.catalog.ctlog.dto.BookPageResponseDto;
 import com.catalog.ctlog.dto.BookResponseDto;
 import com.catalog.ctlog.dto.BookUpdateRequestDto;
 import com.catalog.ctlog.service.BookService;
@@ -35,6 +36,15 @@ public class BookController {
     @GetMapping
     public ResponseEntity<List<BookResponseDto>> getAllBooks() {
         return ResponseEntity.ok(bookService.getAllBooks());
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<BookPageResponseDto> getBooksPage(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "9") int size,
+            @RequestParam(defaultValue = "title,asc") String sort,
+            @RequestParam(required = false) String category) {
+        return ResponseEntity.ok(bookService.getBooksPage(page, size, sort, category));
     }
 
     /**

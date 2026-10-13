@@ -12,8 +12,8 @@ import com.inventory.invtry.dto.InventoryRequestDto;
 import com.inventory.invtry.dto.InventoryResponseDto;
 import com.inventory.invtry.exception.ResourceNotFoundException;
 import com.inventory.invtry.exception.ValidationException;
-import com.inventory.invtry.modal.BorrowRecord;
-import com.inventory.invtry.modal.Inventory;
+import com.inventory.invtry.model.BorrowRecord;
+import com.inventory.invtry.model.Inventory;
 import com.inventory.invtry.repository.BorrowRecordRepository;
 import com.inventory.invtry.repository.InventoryRepository;
 import com.inventory.invtry.service.InventoryService;
@@ -21,6 +21,8 @@ import com.inventory.invtry.service.InventoryService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.inventory.invtry.exception.ForbiddenException;
 
 @Service
 @Transactional
@@ -70,6 +72,16 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
+    public List<InventoryResponseDto> getInventoryByBookIds(List<Long> bookIds) {
+        if (bookIds.isEmpty()) {
+            return List.of();
+        }
+        return inventoryRepository.findByBookIdIn(bookIds).stream()
+                .map(this::mapToDto)
+                .toList();
+    }
+
+    @Override
     public List<InventoryResponseDto> getAllInventory() {
         return inventoryRepository.findAll().stream()
                 .map(this::mapToDto)
@@ -97,11 +109,9 @@ public class InventoryServiceImpl implements InventoryService {
                 throw new ValidationException("No copies currently available to borrow for '" + book.title() + "'.");
             }
 
-            // Decrement available copies
             inventory.setAvailableCopies(inventory.getAvailableCopies() - 1);
             inventoryRepository.save(inventory);
 
-            // Create borrow record
             BorrowRecord record = BorrowRecord.builder()
                     .userId(request.getUserId())
                     .bookId(bookId)
@@ -139,7 +149,6 @@ public class InventoryServiceImpl implements InventoryService {
         record.setReturnDate(LocalDateTime.now());
         BorrowRecord updatedRecord = borrowRecordRepository.save(record);
 
-        // Restore stock
         inventoryRepository.findByBookId(record.getBookId()).ifPresent(inventory -> {
             if (inventory.getAvailableCopies() < inventory.getTotalCopies()) {
                 inventory.setAvailableCopies(inventory.getAvailableCopies() + 1);
@@ -148,6 +157,34 @@ public class InventoryServiceImpl implements InventoryService {
         });
 
         return mapToBorrowDto(updatedRecord);
+    }
+
+    @Override
+    public List<BorrowResponseDto> borrowBooksForUser(Long userId, BorrowRequestDto request) {
+        if (!userId.equals(request.getUserId())) {
+            throw new ForbiddenException("You cannot borrow on behalf of another user.");
+        }
+        return borrowBooks(request);
+    }
+
+    @Override
+    public List<BorrowResponseDto> getLoansForUser(Long currentUserId, Long requestedUserId) {
+        if (!currentUserId.equals(requestedUserId)) {
+            throw new ForbiddenException("You can only view your own borrowing history.");
+        }
+        return getLoansByUserId(requestedUserId);
+    }
+
+    @Override
+    public BorrowResponseDto returnBookForUser(Long currentUserId, Long loanId) {
+        BorrowRecord record = borrowRecordRepository.findById(loanId)
+                .orElseThrow(() -> new ResourceNotFoundException("BorrowRecord", "id", loanId));
+
+        if (!currentUserId.equals(record.getUserId())) {
+            throw new ForbiddenException("You can only return your own borrowed books.");
+        }
+
+        return returnBook(loanId);
     }
 
     private BorrowResponseDto mapToBorrowDto(BorrowRecord record) {
@@ -174,4 +211,3 @@ public class InventoryServiceImpl implements InventoryService {
         );
     }
 }
-

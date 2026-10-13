@@ -6,10 +6,7 @@ import com.dlms.auth.repository.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.config.Customizer;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class RoleDataInitializer {
@@ -31,25 +28,5 @@ public class RoleDataInitializer {
                 roleRepository.save(adminRole);
             }
         };
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-        http
-            // REST API → disable CSRF
-            .csrf(csrf -> csrf.disable())
-
-            // Explicit authorization rules
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                .anyRequest().permitAll()
-            )
-
-            // No login form, no HTTP basic
-            .httpBasic(Customizer.withDefaults())
-            .formLogin(form -> form.disable());
-
-        return http.build();
     }
 }

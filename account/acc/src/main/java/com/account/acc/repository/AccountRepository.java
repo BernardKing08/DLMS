@@ -1,6 +1,6 @@
 package com.account.acc.repository;
 
-import com.account.acc.modal.Account;
+import com.account.acc.model.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

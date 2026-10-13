@@ -91,8 +91,9 @@ public class AccountController {
         if (!SessionUser.isLoggedIn(session)) {
             return "redirect:/signin";
         }
+        Long userId = SessionUser.getUserId(session);
         try {
-            inventoryClient.returnBook(loanId);
+            inventoryClient.returnBook(userId, loanId);
             redirectAttributes.addFlashAttribute("returnSuccess", "Book returned successfully.");
         } catch (ValidationException ex) {
             redirectAttributes.addFlashAttribute("returnError", ex.getMessage());

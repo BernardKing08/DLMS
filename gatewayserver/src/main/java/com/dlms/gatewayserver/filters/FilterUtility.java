@@ -9,15 +9,14 @@ import java.util.List;
 @Component
 public class FilterUtility {
 
-    public static final String CORRELATION_ID = "eazybank-correlation-id";
+    public static final String CORRELATION_ID = "dlms-correlation-id";
 
     public String getCorrelationId(HttpHeaders requestHeaders) {
-        if (requestHeaders.get(CORRELATION_ID) != null) {
-            List<String> requestHeaderList = requestHeaders.get(CORRELATION_ID);
-            return requestHeaderList.stream().findFirst().get();
-        } else {
-            return null;
+        List<String> values = requestHeaders.get(CORRELATION_ID);
+        if (values != null && !values.isEmpty()) {
+            return values.getFirst();
         }
+        return null;
     }
 
     public ServerWebExchange setRequestHeader(ServerWebExchange exchange, String name, String value) {
@@ -27,5 +26,4 @@ public class FilterUtility {
     public ServerWebExchange setCorrelationId(ServerWebExchange exchange, String correlationId) {
         return this.setRequestHeader(exchange, CORRELATION_ID, correlationId);
     }
-
 }

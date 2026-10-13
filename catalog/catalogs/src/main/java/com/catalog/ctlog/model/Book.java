@@ -1,11 +1,12 @@
-package com.catalog.ctlog.modal;
+package com.catalog.ctlog.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Table(name = "books")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

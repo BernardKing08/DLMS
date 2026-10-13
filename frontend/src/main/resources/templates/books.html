@@ -44,7 +44,7 @@
         <!-- End: Header Section -->
 
         <!-- Start: Page Banner -->
-        <section class="page-banner services-banner">
+        <section class="page-banner product-banner">
             <div class="container">
                 <div class="banner-header">
                     <h2>Books & Media Listing</h2>
@@ -73,7 +73,8 @@
                                     <div class="container">
                                         <div class="filter-box">
                                             <h3>What are you looking for at the library?</h3>
-                                            <form th:action="@{/books}" method="get">
+                                            <form id="filterForm" th:action="@{/books}" method="get">
+                                                <input type="hidden" name="sort" id="sortInput" th:value="${sort}" />
                                                 <div class="col-md-4 col-sm-6">
                                                     <div class="form-group">
                                                         <label class="sr-only" for="keywords">Search by Keyword</label>
@@ -119,19 +120,16 @@
                                     <div class="filter-options margin-list">
                                         <div class="row">                                            
                                             <div class="col-md-4 col-sm-4">
-                                                <select name="orderby">
-                                                    <option selected="selected">Default sorting</option>
-                                                    <option>Sort by popularity</option>
-                                                    <option>Sort by rating</option>
-                                                    <option>Sort by newness</option>
-                                                    <option>Sort by price</option>
+                                                <select name="orderby" id="orderby" onchange="document.getElementById('sortInput').value=this.value; document.getElementById('filterForm').submit();">
+                                                    <option value="title,asc" th:selected="${sort == 'title,asc'}">Sort by Title (A-Z)</option>
+                                                    <option value="title,desc" th:selected="${sort == 'title,desc'}">Sort by Title (Z-A)</option>
+                                                    <option value="author,asc" th:selected="${sort == 'author,asc'}">Sort by Author (A-Z)</option>
+                                                    <option value="author,desc" th:selected="${sort == 'author,desc'}">Sort by Author (Z-A)</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-4 col-sm-4">
                                                 <div class="filter-result"
-                                                     th:text="${selectedCategory != null and !selectedCategory.isEmpty()}
-                                                               ? ('Showing ' + ${#lists.size(books)} + ' of ' + ${totalBookCount} + ' total, filtered by ' + ${selectedCategory})
-                                                               : ('Showing all ' + ${totalBookCount} + ' books')">Showing items</div>
+                                                     th:text="|Showing ${#lists.size(books)} of ${totalBookCount} items (Page ${currentPage} of ${totalPages})|">Showing items</div>
                                             </div>
                                             <div class="col-md-3 col-sm-3 pull-right">
                                                 <div class="filter-toggle">
@@ -220,15 +218,19 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <nav class="navigation pagination text-center">
+                                    <nav class="navigation pagination text-center" th:if="${totalPages > 1}">
                                         <h2 class="screen-reader-text">Posts navigation</h2>
                                         <div class="nav-links">
-                                            <a class="prev page-numbers" href="#."><i class="fa fa-long-arrow-left"></i> Previous</a>
-                                            <a class="page-numbers" href="#.">1</a>
-                                            <span class="page-numbers current">2</span>
-                                            <a class="page-numbers" href="#.">3</a>
-                                            <a class="page-numbers" href="#.">4</a>
-                                            <a class="next page-numbers" href="#.">Next <i class="fa fa-long-arrow-right"></i></a>
+                                            <a class="prev page-numbers" th:if="${currentPage > 1}"
+                                               th:href="@{/books(category=${selectedCategory}, page=${currentPage - 1}, sort=${sort})}"><i class="fa fa-long-arrow-left"></i> Previous</a>
+
+                                            <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+                                                <a class="page-numbers" th:if="${i != currentPage}" th:href="@{/books(category=${selectedCategory}, page=${i}, sort=${sort})}" th:text="${i}">1</a>
+                                                <span class="page-numbers current" th:if="${i == currentPage}" th:text="${i}">1</span>
+                                            </span>
+
+                                            <a class="next page-numbers" th:if="${currentPage < totalPages}"
+                                               th:href="@{/books(category=${selectedCategory}, page=${currentPage + 1}, sort=${sort})}">Next <i class="fa fa-long-arrow-right"></i></a>
                                         </div>
                                     </nav>
                                 </div>
@@ -378,56 +380,20 @@
                                             <div class="clearfix"></div>
                                         </div>
                                         <div class="widget widget_recent_entries">
-                                            <h4 class="widget-title">On-Order Items</h4>
+                                            <h4 class="widget-title">Catalog Books</h4>
                                             <ul>
-                                                <li>
+                                                <li th:each="book, bookStat : ${books}" th:if="${bookStat.index < 3}">
                                                     <figure>
-                                                        <img th:src="@{/images/order-item-01.jpg}" alt="product" />
+                                                        <img th:src="${book.coverImageUrl != null and !book.coverImageUrl.isBlank() ? book.coverImageUrl : '/images/order-item-01.jpg'}"
+                                                             th:alt="${book.title} + ' cover'"
+                                                             onerror="this.onerror=null;this.src='/images/order-item-01.jpg';" />
                                                     </figure>
-                                                    <a href="#">The Sonic Boom</a>
-                                                    <span class="price"><strong>Author:</strong> F. Scott Fitzgerald</span>
-                                                    <span><strong>ISBN:</strong> 978158157</span>
-                                                    <div class="rating">
-                                                        <span>☆</span>
-                                                        <span>☆</span>
-                                                        <span>☆</span>
-                                                        <span>☆</span>
-                                                        <span>☆</span>
-                                                    </div>
+                                                    <a th:href="@{/books/{id}(id=${book.id})}" th:text="${book.title}">Book title</a>
+                                                    <span class="price"><strong>Author:</strong> <span th:text="${book.author}">Author</span></span>
+                                                    <span><strong>ISBN:</strong> <span th:text="${book.isbn}">ISBN</span></span>
                                                     <div class="clearfix"></div>
                                                 </li>
-                                                <li>
-                                                    <figure>
-                                                        <img th:src="@{/images/order-item-02.jpg}" alt="product" />
-                                                    </figure>
-                                                    <a href="#">The Sonic Boom</a>
-                                                    <span class="price"><strong>Author:</strong> F. Scott Fitzgerald</span>
-                                                    <span><strong>ISBN:</strong> 978158157</span>
-                                                    <div class="rating">
-                                                        <span>☆</span>
-                                                        <span>☆</span>
-                                                        <span>☆</span>
-                                                        <span>☆</span>
-                                                        <span>☆</span>
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </li>
-                                                <li>
-                                                    <figure>
-                                                        <img th:src="@{/images/order-item-03.jpg}" alt="product" />
-                                                    </figure>
-                                                    <a href="#">The Sonic Boom</a>
-                                                    <span class="price"><strong>Author:</strong> F. Scott Fitzgerald</span>
-                                                    <span><strong>ISBN:</strong> 978158157</span>
-                                                    <div class="rating">
-                                                        <span>☆</span>
-                                                        <span>☆</span>
-                                                        <span>☆</span>
-                                                        <span>☆</span>
-                                                        <span>☆</span>
-                                                    </div>
-                                                    <div class="clearfix"></div>
-                                                </li>
+                                                <li th:if="${#lists.isEmpty(books)}">No catalog books are available.</li>
                                             </ul>
                                             <div class="clearfix"></div>
                                         </div>
@@ -442,7 +408,7 @@
                                 <div class="center-content">
                                     <h2 class="section-title">Staff Picks</h2>
                                     <span class="underline center"></span>
-                                    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                                    <p class="lead">Explore the catalog and discover books to borrow.</p>
                                 </div>
                                 <div class="team-list">
                                     <div class="team-member">
@@ -480,7 +446,7 @@
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <p>The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here...</p>
+                                                <p>Browse titles in the catalog, review book details, and add books to your borrowing cart.</p>
                                                 <a class="btn btn-primary" href="#">Read More</a>
                                             </div>
                                         </div>
@@ -520,7 +486,7 @@
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <p>The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here...</p>
+                                                <p>Browse titles in the catalog, review book details, and add books to your borrowing cart.</p>
                                                 <a class="btn btn-primary" href="#">Read More</a>
                                             </div>
                                         </div>
@@ -560,7 +526,7 @@
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <p>The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here...</p>
+                                                <p>Browse titles in the catalog, review book details, and add books to your borrowing cart.</p>
                                                 <a class="btn btn-primary" href="#">Read More</a>
                                             </div>
                                         </div>
@@ -581,7 +547,7 @@
                 <div class="center-content">
                     <h2 class="section-title">Follow Us</h2>
                     <span class="underline center"></span>
-                    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p class="lead">Explore the catalog and discover books to borrow.</p>
                 </div>
                 <ul>
                     <li>

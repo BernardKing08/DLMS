@@ -1,6 +1,6 @@
 package com.inventory.invtry.repository;
 
-import com.inventory.invtry.modal.BorrowRecord;
+import com.inventory.invtry.model.BorrowRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

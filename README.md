@@ -76,16 +76,19 @@ Server-rendered, not a JS single-page app — `@Controller` classes fetch data v
 | `GET /account` | `GET /api/accounts/{userId}` | Requires a session (redirects to `/signin` otherwise); shows a "still setting up" message instead of erroring if the profile hasn't finished auto-provisioning yet |
 | `POST /account` | `PUT /api/accounts/{userId}` | Updates profile fields |
 | `GET /logout` | — | Clears the session |
-| `GET /cart`, `POST /cart/add/{bookId}`, `POST /cart/remove/{bookId}` | Catalog availability | Session-scoped borrowing cart; selecting a title does not reserve copies |
-| `GET /checkout`, `POST /checkout` | Catalog availability | Prepares an email inquiry for the selected titles; the user must send it and the library must confirm availability |
-| `GET /services` | — | Informational overview of catalog, account, and borrowing inquiry features |
+| `GET /cart`, `POST /cart/add/{bookId}`, `POST /cart/remove/{bookId}` | Catalog availability | Session-scoped borrowing cart for browsing; the actual long-term loan state is persisted in Inventory once checkout completes |
+| `GET /checkout`, `POST /checkout` | `POST /api/inventory/borrow` | Requires a logged-in session and a non-empty cart; confirms the active user, checks stock, and creates Inventory loan records tied to that user |
+| `POST /account/return/{loanId}` | `POST /api/inventory/loans/{id}/return` | Returns a borrowed title for the signed-in user; the backend enforces ownership so users can only return their own loans |
+| `GET /services` | — | Informational overview of catalog, account, and borrowing features |
 | `GET /contact`, `/news-events`, `/news-events/{slug}` | — | Static informational pages — no backend service exists for contact/news content in this system, kept for site completeness |
 
-**Login/session note**: this backend has no JWT or token system — `/api/auth/login` validates credentials and returns who the user is (`id`/`name`/`email`), nothing more. The Frontend keeps "who's logged in" in a plain servlet `HttpSession`, scoped to the Frontend module only. That's enough for a server-rendered app but isn't a substitute for real authentication if this were ever public-facing.
+**Login/session note**: the Frontend still keeps the browser's logged-in identity in a servlet `HttpSession` (`userId`/`name`/`email`/`role`), but the actual long-term loan state is persisted in Inventory and is tied to the authenticated user ID. The Inventory API is protected at the backend boundary: borrow, loan-history, and return calls require the caller to send the signed-in user's `X-User-Id`, and the service rejects attempts to borrow on behalf of another user or return another user's loan.
 
-**Template origin**: pages started from the LIBRARIA HTML template (a bookstore theme) and were adapted to Thymeleaf — asset paths converted to `th:href="@{/css/...}"` etc., the book grid/detail sections rewired to `th:each`/`th:text` against real `BookResponseDto` data, and the login/register forms rewired to real `LoginRequestDto`/`RegisterRequestDto` fields. The borrowing cart is session-scoped and prepares an email inquiry; it does not reserve stock because no reservation service exists yet. The `/account` page has no equivalent in the original template — it's newly built, styled to match the rest of the site.
+**Template origin**: pages started from the LIBRARIA HTML template (a bookstore theme) and were adapted to Thymeleaf — asset paths converted to `th:href="@{/css/...}"` etc., the book grid/detail sections rewired to `th:each`/`th:text` against real `BookResponseDto` data, and the login/register forms rewired to real `LoginRequestDto`/`RegisterRequestDto` fields. The cart remains temporary browser state, but checkout now creates real borrowing records in Inventory, which are stored against the logged-in user and can be listed/returned from the account page. The `/account` page has no equivalent in the original template — it's newly built, styled to match the rest of the site.
 
 **Catalog cover images**: Every seeded book uses an ISBN-specific cover from the [Open Library Covers API](https://covers.openlibrary.org/). Seed ISBNs are checked against the cover service, and seed entries without a cover are replaced with a matching edition that has one. The frontend keeps a bundled fallback in case the remote image service is temporarily unavailable.
+
+**Borrowing/checkout state**: the cart is still browser-session state, but checkout now persists the real borrow transaction in Inventory. Each `BorrowRecord` stores the `userId`, `bookId`, pickup location, notes, due date, and status, so the library can remember which books belong to which user after the browser session is gone.
 
 ## Running locally
 
@@ -134,6 +137,8 @@ To run all four services standalone against H2 (no Docker at all — useful for 
 ```
 This opens four separate PowerShell windows (`account`, `auth`, `catalog`, `inventory`), each already on the `qa` profile, so you can watch each service's logs independently. See the script's own header comment for the execution-policy workaround if PowerShell blocks it from running. It doesn't start `eurekaserver`, `gatewayserver`, or `frontend` — start those separately (`cd eurekaserver && ./mvnw spring-boot:run`, same pattern for the other two) if you want the full discovery/routing/browser picture while testing standalone. The Frontend has no `qa` profile of its own (it has no database), so it runs the same way regardless.
 
+**Borrowing/retrieval flow**: a logged-in user adds books to the browser cart, then confirms checkout at `/checkout`; the frontend sends the book IDs and current session user ID to Inventory. Inventory validates stock, decrements the available copies, and creates a `BorrowRecord` row per book attached to that user. Later, `/account` loads those records via `GET /api/inventory/loans/user/{userId}` and the user can return them through `/account/return/{loanId}`. This is the long-term library state; the cart itself is temporary UI state only.
+
 To run just one service standalone:
 ```
 cd account/acc
@@ -160,7 +165,7 @@ The `lb://` prefix means "look this service ID up in Eureka and pick one of its 
 
 **A real gotcha worth knowing**: the property that turns on the discovery locator is `spring.cloud.gateway.server.webflux.discovery.locator.enabled` in this Gateway's Spring Cloud version (5.0.2) — *not* the classic `spring.cloud.gateway.discovery.locator.enabled` you'll find in most tutorials and Stack Overflow answers. The artifact itself was renamed from `spring-cloud-starter-gateway` to `spring-cloud-starter-gateway-server-webflux` in this generation, and the property prefix moved with it. Using the old property name doesn't error — Spring Boot silently ignores unrecognized properties by default — it just quietly never turns anything on, which is a much harder bug to notice than a crash.
 
-**Correlation ID tracing**: two global filters in `gatewayserver/src/main/java/com/dlms/gatewayserver/filters/` (`RequestTraceFilter`, `ResponseTraceFilter`) generate a UUID correlation ID for every request that doesn't already carry one (header name `eazybank-correlation-id`), and echo it back on the response. Every domain service **and the Frontend** carry a matching `CorrelationIdFilter` that reads that header into MDC, and every `application.yml` sets:
+**Correlation ID tracing**: two global filters in `gatewayserver/src/main/java/com/dlms/gatewayserver/filters/` (`RequestTraceFilter`, `ResponseTraceFilter`) generate a UUID correlation ID for every request that doesn't already carry one (header name `dlms-correlation-id`), and echo it back on the response. Every domain service **and the Frontend** carry a matching `CorrelationIdFilter` that reads that header into MDC, and every `application.yml` sets:
 ```yaml
 logging:
   pattern:
@@ -223,7 +228,7 @@ Same request, through the Gateway instead:
 ```
 POST http://localhost:8072/dlms/authentication/api/auth/register
 ```
-Identical body, identical result — the Gateway strips `/dlms/authentication`, forwards `/api/auth/register` to whichever `AUTHENTICATION` instance Eureka currently has registered, and both request and response pick up an `eazybank-correlation-id` header along the way.
+Identical body, identical result — the Gateway strips `/dlms/authentication`, forwards `/api/auth/register` to whichever `AUTHENTICATION` instance Eureka currently has registered, and both request and response pick up an `dlms-correlation-id` header along the way.
 
 ## Notes for local development
 

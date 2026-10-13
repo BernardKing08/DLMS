@@ -1,7 +1,7 @@
 package com.dlms.frontend.controller;
 
 import com.dlms.frontend.client.CatalogClient;
-import com.dlms.frontend.dto.BookResponseDto;
+import com.dlms.frontend.dto.BookPageResponseDto;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -23,28 +22,46 @@ public class CatalogController {
 
     @GetMapping("/books")
     public String list(@RequestParam(required = false) String category,
-                        Model model, HttpSession session) {
+                       @RequestParam(defaultValue = "1") int page,
+                       @RequestParam(defaultValue = "9") int size,
+                       @RequestParam(defaultValue = "title,asc") String sort,
+                       Model model, HttpSession session) {
         SessionUser.addToModel(session, model);
-        List<BookResponseDto> allBooks = catalogClient.getAllBooks();
 
-        List<BookResponseDto> visibleBooks = (category == null || category.isBlank())
-                ? allBooks
-                : allBooks.stream().filter(book -> category.equals(book.getCategory())).toList();
+        size = Math.max(size, 1);
+        if (page < 1) {
+            page = 1;
+        }
 
-        model.addAttribute("books", visibleBooks);
-        model.addAttribute("categories", distinctCategories(allBooks));
+        String normalizedSort = normalizeSort(sort);
+        BookPageResponseDto result = catalogClient.getBooksPage(page, size, normalizedSort, category);
+        if (result == null) {
+            result = new BookPageResponseDto(List.of(), List.of(), 0, 0, page, size);
+        }
+
+        model.addAttribute("books", result.getBooks() != null ? result.getBooks() : List.of());
+        model.addAttribute("categories", result.getCategories() != null ? result.getCategories() : List.of());
         model.addAttribute("selectedCategory", category);
-        model.addAttribute("totalBookCount", allBooks.size());
+        model.addAttribute("totalBookCount", result.getTotalElements());
+        model.addAttribute("currentPage", result.getCurrentPage());
+        model.addAttribute("totalPages", result.getTotalPages());
+        model.addAttribute("pageSize", result.getPageSize());
+        model.addAttribute("sort", normalizedSort);
         return "books";
     }
 
-    private List<String> distinctCategories(List<BookResponseDto> books) {
-        return books.stream()
-                .map(BookResponseDto::getCategory)
-                .filter(category -> category != null && !category.isBlank())
-                .distinct()
-                .sorted(Comparator.naturalOrder())
-                .toList();
+    private String normalizeSort(String sort) {
+        if (sort == null || sort.isBlank()) {
+            return "title,asc";
+        }
+        String[] sortParams = sort.split(",", -1);
+        String field = sortParams.length > 0 && "author".equalsIgnoreCase(sortParams[0].trim())
+                ? "author"
+                : "title";
+        String direction = sortParams.length > 1 && "desc".equalsIgnoreCase(sortParams[1].trim())
+                ? "desc"
+                : "asc";
+        return field + "," + direction;
     }
 
     @GetMapping("/books/{id}")

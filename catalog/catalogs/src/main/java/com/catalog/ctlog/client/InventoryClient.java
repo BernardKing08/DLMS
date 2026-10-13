@@ -12,6 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
 
 import java.util.Optional;
+import java.util.List;
 
 /**
  * Talks to the Inventory service so a newly catalogued book gets a stock
@@ -69,6 +70,31 @@ public class InventoryClient {
         } catch (WebClientException ex) {
             log.warn("Failed to fetch inventory for bookId={}: {}", bookId, ex.getMessage());
             return Optional.empty();
+        }
+    }
+
+    public List<InventoryResponseDto> getInventoryByBookIds(List<Long> bookIds) {
+        if (bookIds.isEmpty()) {
+            return List.of();
+        }
+
+        String correlationId = MDC.get(CorrelationIdFilter.MDC_KEY);
+        if (correlationId == null) {
+            correlationId = "unknown";
+        }
+        try {
+            List<InventoryResponseDto> inventories = webClient.post()
+                    .uri("/api/inventory/batch")
+                    .header(CorrelationIdFilter.CORRELATION_ID_HEADER, correlationId)
+                    .bodyValue(bookIds)
+                    .retrieve()
+                    .bodyToFlux(InventoryResponseDto.class)
+                    .collectList()
+                    .block();
+            return inventories != null ? inventories : List.of();
+        } catch (WebClientException ex) {
+            log.warn("Failed to fetch inventory for {} books: {}", bookIds.size(), ex.getMessage());
+            return List.of();
         }
     }
 }

@@ -21,7 +21,7 @@ import java.util.UUID;
 @Component
 public class CorrelationIdFilter extends OncePerRequestFilter {
 
-    public static final String CORRELATION_ID_HEADER = "eazybank-correlation-id";
+    public static final String CORRELATION_ID_HEADER = "dlms-correlation-id";
     public static final String MDC_KEY = "correlationId";
 
     @Override

@@ -143,8 +143,8 @@ public class BorrowController {
         LinkedHashSet<Long> ids = new LinkedHashSet<>();
         if (storedIds instanceof Iterable<?> values) {
             for (Object value : values) {
-                if (value instanceof Long bookId) {
-                    ids.add(bookId);
+                if (value instanceof Number number) {
+                    ids.add(number.longValue());
                 }
             }
         }

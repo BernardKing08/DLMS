@@ -13,6 +13,8 @@ public interface InventoryService {
 
     InventoryResponseDto getInventoryByBookId(Long bookId);
 
+    List<InventoryResponseDto> getInventoryByBookIds(List<Long> bookIds);
+
     List<InventoryResponseDto> getAllInventory();
 
     List<BorrowResponseDto> borrowBooks(BorrowRequestDto request);
@@ -20,5 +22,10 @@ public interface InventoryService {
     List<BorrowResponseDto> getLoansByUserId(Long userId);
 
     BorrowResponseDto returnBook(Long loanId);
-}
 
+    List<BorrowResponseDto> borrowBooksForUser(Long userId, BorrowRequestDto request);
+
+    List<BorrowResponseDto> getLoansForUser(Long currentUserId, Long requestedUserId);
+
+    BorrowResponseDto returnBookForUser(Long currentUserId, Long loanId);
+}

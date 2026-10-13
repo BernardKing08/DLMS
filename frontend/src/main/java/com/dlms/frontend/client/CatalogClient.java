@@ -1,6 +1,7 @@
 package com.dlms.frontend.client;
 
 import com.dlms.frontend.dto.BookResponseDto;
+import com.dlms.frontend.dto.BookPageResponseDto;
 import com.dlms.frontend.dto.BookUpdateRequestDto;
 import com.dlms.frontend.exception.ResourceNotFoundException;
 import com.dlms.frontend.exception.ServiceUnavailableException;
@@ -44,6 +45,29 @@ public class CatalogClient {
             // ServiceUnavailable (503) is what Spring Cloud LoadBalancer throws when
             // Eureka has no registered/healthy instance for this service - a
             // different failure mode than a connection-level WebClientRequestException.
+            throw new ServiceUnavailableException("Catalog", ex.getMessage());
+        }
+    }
+
+    public BookPageResponseDto getBooksPage(int page, int size, String sort, String category) {
+        String correlationId = currentCorrelationId();
+        try {
+            return webClient.get()
+                    .uri(uriBuilder -> {
+                        var builder = uriBuilder.path("/api/catalog/page")
+                                .queryParam("page", page)
+                                .queryParam("size", size)
+                                .queryParam("sort", sort);
+                        if (category != null && !category.isBlank()) {
+                            builder.queryParam("category", category);
+                        }
+                        return builder.build();
+                    })
+                    .header(CorrelationIdFilter.CORRELATION_ID_HEADER, correlationId)
+                    .retrieve()
+                    .bodyToMono(BookPageResponseDto.class)
+                    .block();
+        } catch (WebClientResponseException.ServiceUnavailable | WebClientRequestException ex) {
             throw new ServiceUnavailableException("Catalog", ex.getMessage());
         }
     }
@@ -95,4 +119,3 @@ public class CatalogClient {
         return correlationId != null ? correlationId : "unknown";
     }
 }
-

@@ -1,4 +1,4 @@
-package com.account.acc.modal;
+package com.account.acc.model;
 
 import jakarta.persistence.*;
 import lombok.*;

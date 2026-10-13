@@ -1,12 +1,19 @@
 package com.catalog.ctlog;
 
+import com.catalog.ctlog.model.Book;
+import com.catalog.ctlog.repository.BookRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
+
+import java.util.List;
 
 @SpringBootTest
 @ActiveProfiles("qa")
@@ -19,6 +26,9 @@ class CatalogsApplicationTests {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	private BookRepository bookRepository;
 
 	@Test
 	void contextLoads() {
@@ -58,5 +68,18 @@ class CatalogsApplicationTests {
 
 		Assertions.assertEquals(0, seededBooksWithoutCoverUrls);
 		Assertions.assertEquals(0, oldMissingCoverIsbns);
+	}
+
+	@Test
+	void catalogRepositorySupportsPagedAndCategoryFilteredQueries() {
+		Page<Book> firstPage = bookRepository.findAll(
+				PageRequest.of(0, 9, Sort.by(Sort.Order.asc("title").ignoreCase()).and(Sort.by("id"))));
+		List<String> categories = bookRepository.findDistinctCategories();
+
+		Assertions.assertFalse(firstPage.getContent().isEmpty());
+		Assertions.assertTrue(firstPage.getContent().size() <= 9);
+		Assertions.assertFalse(categories.isEmpty());
+		Assertions.assertFalse(bookRepository.findByCategory(
+				categories.get(0), PageRequest.of(0, 9)).getContent().isEmpty());
 	}
 }

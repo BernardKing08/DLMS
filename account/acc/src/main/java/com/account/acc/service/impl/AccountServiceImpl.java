@@ -7,7 +7,7 @@ import com.account.acc.dto.AccountResponseDto;
 import com.account.acc.dto.AccountUpdateRequestDto;
 import com.account.acc.dto.AuthUserResponseDto;
 import com.account.acc.exception.ResourceNotFoundException;
-import com.account.acc.modal.Account;
+import com.account.acc.model.Account;
 import com.account.acc.repository.AccountRepository;
 import com.account.acc.service.AccountService;
 import org.springframework.stereotype.Service;

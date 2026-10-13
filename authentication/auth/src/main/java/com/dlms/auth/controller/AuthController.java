@@ -6,7 +6,7 @@ import com.dlms.auth.dto.RegisterRequest;
 import com.dlms.auth.dto.ResponseDto;
 import com.dlms.auth.dto.UserResponseDto;
 import com.dlms.auth.model.User;
-import com.dlms.auth.service.Impl.AuthServiceImpl;
+import com.dlms.auth.service.IAuthService;
 
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final AuthServiceImpl authService;
+    private final IAuthService authService;
 
-    public AuthController(AuthServiceImpl authService) {
+    public AuthController(IAuthService authService) {
         this.authService = authService;
     }
 
